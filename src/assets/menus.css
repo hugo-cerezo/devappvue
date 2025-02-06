@@ -1,0 +1,110 @@
+@import './base.css';
+
+body {
+    font-family: sans-serif;
+    margin: 20px;
+    background-color: grey;
+    color: #333;
+  }
+
+  h1,
+  h2 {
+    text-align: center;
+    color: #007bff;
+    margin-bottom: 20px;
+  }
+
+  h2 {
+    font-size: 1.5em;
+    margin-top: 20px;
+  }
+
+  form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px; /* Ajoute de l'espace entre les formulaires */
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500; /* Légèrement plus gras */
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="date"],
+  select {
+    width: calc(
+      100% - 22px
+    ); /* Ajuste la largeur pour inclure le padding et la bordure */
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+
+  select[multiple] {
+    height: 100px; /* Hauteur fixe pour le select multiple */
+    overflow-y: auto;
+  }
+
+  button[type="button"] {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+
+  button[type="button"]:hover {
+    background-color: #0056b3;
+  }
+
+  #menu-plats-container {
+    display: flex;
+    gap: 10px; /* Espacement entre les select */
+    margin-bottom: 15px;
+  }
+
+  #menu-list {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+
+  #menu-list ul {
+    list-style-type: none; /* Supprime les puces de liste */
+    padding: 0;
+  }
+
+  #menu-list li {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    #menu-plats-container {
+      flex-direction: column; /* Passe en colonne sur les petits écrans */
+    }
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select,
+    button[type="button"] {
+      font-size: 14px;
+    }
+  }
