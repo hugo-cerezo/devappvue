@@ -15,7 +15,7 @@ const handleLoginSuccess = (response: CredentialResponse) => {
   }
   loggedIn.value = true
   decodedCredential.value = decodeCredential(credential)
-  console.log('Access Token', decodedCredential)
+  console.log('Access Token', credential)
 }
 
 // handle an error event
@@ -27,5 +27,7 @@ const handleLoginError = () => {
 
 <template>
   <GoogleSignInButton v-show="!loggedIn" @success="handleLoginSuccess" @error="handleLoginError" />
-  <div v-show="loggedIn">Hello {{ decodedCredential?.email }}</div>
+  <div v-show="loggedIn">
+    <p>Hello <strong>{{ decodedCredential?.email }}</strong></p>
+  </div>
 </template>
