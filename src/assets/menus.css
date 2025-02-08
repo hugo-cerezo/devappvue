@@ -1,110 +1,114 @@
 @import './base.css';
 
 body {
-    font-family: sans-serif;
-    margin: 20px;
-    background-color: grey;
-    color: #333;
-  }
+  font-family: sans-serif; /* Police sans-serif moderne */
+  margin: 20px;
+  background-color: #f4f4f4; /* Fond légèrement gris */
+  color: #333; /* Texte sombre pour le contraste */
+}
 
-  h1,
-  h2 {
-    text-align: center;
-    color: #007bff;
-    margin-bottom: 20px;
-  }
+h1 {
+  text-align: center; /* Titre centré */
+  margin-bottom: 20px;
+  color: #007bff; /* Couleur bleue pour le titre */
+}
 
-  h2 {
-    font-size: 1.5em;
-    margin-top: 20px;
-  }
+label {
+  display: block; /* Étiquettes au-dessus des éléments */
+  margin-bottom: 5px;
+}
 
-  form {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px; /* Ajoute de l'espace entre les formulaires */
-  }
+select,
+button {
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Important pour le padding et la bordure */
+  font-size: 16px;
+}
 
-  label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500; /* Légèrement plus gras */
-  }
+button {
+  background-color: #007bff; /* Boutons bleus */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Transition au hover */
+}
 
-  input[type="text"],
-  input[type="number"],
-  input[type="date"],
-  select {
-    width: calc(
-      100% - 22px
-    ); /* Ajuste la largeur pour inclure le padding et la bordure */
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 16px;
-  }
+button:hover {
+  background-color: #0056b3; /* Bleu plus foncé au hover */
+}
 
-  select[multiple] {
-    height: 100px; /* Hauteur fixe pour le select multiple */
-    overflow-y: auto;
-  }
+/* Styles du tableau */
+table {
+  width: 80vw;
+  border-collapse: collapse;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre légère */
+  background-color: white; /* Fond blanc pour le tableau */
+  border-radius: 8px; /* Bords arrondis */
+  overflow: hidden; /* Important pour les bords arrondis avec box-shadow */
+}
 
-  button[type="button"] {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-  }
+th,
+td {
+  border: 1px solid #ddd; /* Bords gris clair */
+  padding: 12px 15px; /* Espacement intérieur plus généreux */
+  text-align: left;
+  vertical-align: top;
+}
 
-  button[type="button"]:hover {
-    background-color: #0056b3;
-  }
+th {
+  background-color: #007bff; /* En-tête bleu */
+  color: white;
+  font-weight: 600; /* Texte en gras */
+  text-transform: uppercase; /* En-tête en majuscules */
+}
 
-  #menu-plats-container {
-    display: flex;
-    gap: 10px; /* Espacement entre les select */
-    margin-bottom: 15px;
-  }
+tr:nth-child(even) {
+  background-color: #f9f9f9; /* Lignes paires légèrement grisées */
+}
 
-  #menu-list {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-  }
+/* Styles pour le drag and drop */
+.dropzone {
+  border: 2px dashed #ccc;
+  min-height: 50px;
+  padding: 5px;
+  transition: border-color 0.3s ease; /* Transition pour la bordure */
+}
 
-  #menu-list ul {
-    list-style-type: none; /* Supprime les puces de liste */
-    padding: 0;
-  }
+.dropzone:hover {
+  border-color: #007bff; /* Bordure bleue au hover */
+}
 
-  #menu-list li {
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #f9f9f9;
-  }
+.draggable {
+  cursor: move;
+  background-color: #e6f2ff; /* Fond bleu clair pour les éléments draggable */
+  padding: 5px;
+  margin: 2px 0; /* Marge pour séparer les éléments */
+  border-radius: 4px;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1); /* Ombre légère */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
-  /* Responsive design */
-  @media (max-width: 768px) {
-    #menu-plats-container {
-      flex-direction: column; /* Passe en colonne sur les petits écrans */
-    }
-    input[type="text"],
-    input[type="number"],
-    input[type="date"],
-    select,
-    button[type="button"] {
-      font-size: 14px;
-    }
+.draggable:hover {
+  transform: scale(1.02); /* Légère augmentation de taille au hover */
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#addproducts{
+  display: flex;
+  margin-top: 5vh;
+}
+#plat-form{
+  margin-right: 5vw;
+}
+/* Responsive design (pour les petits écrans) */
+@media (max-width: 768px) {
+  table {
+    font-size: 14px; /* Taille de police plus petite sur les petits écrans */
   }
+  th,
+  td {
+    padding: 8px 10px;
+  }
+}

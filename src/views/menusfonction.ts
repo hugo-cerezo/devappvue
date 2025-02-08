@@ -265,7 +265,6 @@ export function sauvegarderMenu(): void {
 }
 
 export function toggleEditMode(): void {
-  console.log('caca')
   editMode = !editMode
   const modifierMenuButton = document.getElementById('modifier-menu') as HTMLButtonElement
   const sauvegarderMenuButton = document.getElementById('sauvegarder-menu') as HTMLButtonElement
@@ -384,51 +383,6 @@ export function saveData(): void {
     })
     .catch((error) => console.error('Erreur lors du POST:', error))
 }
-//... (Interfaces Plat, PlatDuMenu, Menu from previous responses)
-
-// function sauvegarderMenu(): void {
-//     if (selectedMenuIndex!== -1) {
-//       const dataToSave = {
-//         plats: platsData,
-//         menus: menusData,
-//         products: products, // Ensure 'products' is defined and typed
-//       };
-
-//       fetch("http://localhost:3000/data", {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify(dataToSave),
-//       })
-//       .then((response) => {
-//           if (!response.ok) {
-//             return response.text().then((text) => {
-//               throw new Error(`${response.status} ${response.statusText}: ${text}`);
-//             });
-//           }
-//           return response.json(); // Parse JSON response
-//         })
-//       .then((data) => {
-//           console.log("Réponse du serveur:", data); // Log the parsed JSON
-//           alert("Menu sauvegardé!");
-//           toggleEditMode(); // Disable edit mode after saving
-//         })
-//       .catch((error) => {
-//           console.error("Erreur lors du POST:", error);
-//           alert("Erreur lors de la sauvegarde du menu.");
-//         });
-//     } else {
-//       alert("Veuillez sélectionner un menu à sauvegarder.");
-//     }
-//   }
-
-//   function afficherFormulaireAjoutPlat(): void {
-//     const form = document.getElementById("formulaire-ajout-plat") as HTMLElement;
-//     if (form) {
-//       form.style.display = "block";
-//     }
-//   }
 
 export function ajouterPlatAuMenu(): void {
   const selectPlat = document.getElementById('select-plat') as HTMLSelectElement
