@@ -37,17 +37,20 @@ export default {
 <template>
   <div>
     <div class="d-flex flex-row">
-      <button @click="changeView('dayGridYear')" class="btn btn-primary">Year</button>
-      <button @click="changeView('dayGridMonth')" class="btn btn-primary">Month</button>
-      <button @click="changeView('dayGridWeek')" class="btn btn-primary">Week</button>
-      <button @click="changeView('dayGridDay')" class="btn btn-primary">Day</button>
-      <button @click="changeView('dayGrid')" class="btn btn-primary">Generic</button>
+      <button @click="changeView('dayGridYear')" class="viewBtn btn btn-primary">Year</button>
+      <button @click="changeView('dayGridMonth')" class="viewBtn btn btn-primary">Month</button>
+      <button @click="changeView('dayGridWeek')" class="viewBtn btn btn-primary">Week</button>
+      <button @click="changeView('dayGridDay')" class="viewBtn btn btn-primary">Day</button>
+      <button @click="changeView('dayGrid')" class="viewBtn btn btn-primary">Generic</button>
     </div>
     <FullCalendar id="calendar" ref="fullCalendar" :options="calendarOptions" />
   </div>
 </template>
 
 <style lang="css" scoped>
+.viewBtn {
+  margin-right: 5px;
+}
 #calendar {
   width: 1100px;
 }
