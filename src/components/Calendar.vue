@@ -2,12 +2,14 @@
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
+
 import type { DateClickArg } from '@fullcalendar/interaction'
+import type { CalendarOptions, EventClickArg } from '@fullcalendar/core/index.js'
+
 import bootstrap5Plugin from '@fullcalendar/bootstrap5'
 // import the third-party stylesheets directly from your JS
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-icons/font/bootstrap-icons.css' // needs additional webpack config!
-import type { CalendarOptions } from '@fullcalendar/core/index.js'
 
 export default {
   components: {
@@ -21,12 +23,10 @@ export default {
   },
   setup(props, { emit }) {
     const handleDateClick = (arg: DateClickArg) => {
-      emit('update:showModal', arg)
+      emit('modal:create', arg)
     }
-    const eventClick = (arg: any) => {
-      if (confirm('Are you sure you want to delete this event?')) {
-        arg.event.remove()
-      }
+    const eventClick = (arg: EventClickArg) => {
+      emit('modal:edit', arg)
     }
     const calendarOptions: CalendarOptions = {
       plugins: [dayGridPlugin, interactionPlugin, bootstrap5Plugin],
@@ -35,12 +35,19 @@ export default {
       weekends: false,
       selectable: true,
       editable: true,
+      locale: 'fr',
       dateClick: handleDateClick,
       eventClick: eventClick,
       headerToolbar: {
-        left: 'prev,next today',
+        left: 'prev,next today myButton',
         center: 'title',
         right: 'dayGridYear,dayGridMonth,dayGridWeek,dayGridDay',
+      },
+      customButtons: {
+        myButton: {
+          text: 'Custom',
+          click: () => alert('custom button clicked!'),
+        },
       },
     }
 
@@ -52,7 +59,7 @@ export default {
 </script>
 
 <template>
-  <FullCalendar id="calendar" :options="calendarOptions" />
+  <FullCalendar id="calendar" ref="fullCalendar" :options="calendarOptions" />
 </template>
 
 <style lang="css" scoped>

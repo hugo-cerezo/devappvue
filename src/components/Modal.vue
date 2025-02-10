@@ -1,23 +1,31 @@
 <script setup lang="ts">
+import AddEvent from './forms/AddEvent.vue'
+import EditEvent from './forms/EditEvent.vue'
+
 const props = defineProps<{
   show: boolean
-  formType?: string
+  type: string
+  event?: any
 }>()
 
-const emit = defineEmits(['update:show', 'update:addEvent'])
-const handleConfirm = (formValues: any) => {
-  emit('update:show', false)
-  emit('update:addEvent', formValues)
-}
+const emit = defineEmits(['modal:show', 'form:add', 'form:edit', 'form:remove'])
 </script>
 <template>
   <div class="modal" v-show="props.show">
     <div class="modal-content">
       <slot name="modal-slot-content">
         <AddEvent
-          v-if="props.formType == 'form:addEvent'"
-          @cancel="$emit('update:show', false)"
-          @confirm="handleConfirm"
+          v-if="props.type == 'form:add'"
+          @cancel="emit('modal:show', false)"
+          @confirm="(values: any) => emit('form:add', values)"
+        />
+
+        <EditEvent
+          v-if="props.type == 'form:edit' && props.event"
+          :data="props.event"
+          @cancel="() => emit('modal:show', false)"
+          @confirm="(values: any) => emit('form:edit', values)"
+          @remove="emit('form:remove')"
         />
       </slot>
     </div>
