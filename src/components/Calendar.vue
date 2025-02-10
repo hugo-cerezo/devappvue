@@ -2,34 +2,36 @@
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
+import type { DateClickArg } from '@fullcalendar/interaction'
 import bootstrap5Plugin from '@fullcalendar/bootstrap5'
-import type { EventInput } from '@fullcalendar/core'
 // import the third-party stylesheets directly from your JS
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-icons/font/bootstrap-icons.css' // needs additional webpack config!
-import { ref } from 'vue'
-
-const events = ref<EventInput[]>([])
+import type { CalendarOptions } from '@fullcalendar/core/index.js'
 
 export default {
   components: {
     FullCalendar, // make the <FullCalendar> tag available
   },
+  props: {
+    events: {
+      type: Array as () => any,
+      required: true,
+    },
+  },
   setup(props, { emit }) {
-    const handleDateClick = (arg: { dateStr: string }) => {
-      emit('update:showModal', true)
-      // let title = 'New Event'
-      // events.value.push({ title, date: arg.dateStr })
+    const handleDateClick = (arg: DateClickArg) => {
+      emit('update:showModal', arg)
     }
-    const eventClick = (arg: EventInput) => {
+    const eventClick = (arg: any) => {
       if (confirm('Are you sure you want to delete this event?')) {
         arg.event.remove()
       }
     }
-    const calendarOptions = {
+    const calendarOptions: CalendarOptions = {
       plugins: [dayGridPlugin, interactionPlugin, bootstrap5Plugin],
       initialView: 'dayGridMonth',
-      events: events.value,
+      events: props.events,
       weekends: false,
       selectable: true,
       editable: true,

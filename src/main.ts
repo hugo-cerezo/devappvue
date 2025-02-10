@@ -7,11 +7,17 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 
+// Import components
+import AddEvent from './components/forms/AddEvent.vue'
+
 const app = createApp(App)
 
 app.use(router)
 app.use(GoogleSignInPlugin, {
   clientId: GOOGLE_CLIENT_ID,
 })
+
+// Register components
+app.component('AddEvent', AddEvent)
 
 app.mount('#app')
