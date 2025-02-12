@@ -1,409 +1,618 @@
 <template>
   <div>
-    <h1>Planning des Menus</h1>
+    <h1>Planning Multi-Menus</h1>
 
+    <!-- Sélecteur de menu -->
     <div>
-      <label for="menu-selector">Sélectionner un menu:</label>
-      <select id="menu-selector" v-model="selectedMenu">
-        <option v-for="menu in menus" :key="menu.Name" :value="menu.Name">
+      <label for="menu-selector">Choisir un menu :</label>
+      <select id="menu-selector" v-model="selectedMenuIndex">
+        <option
+          v-for="(menu, i) in menus"
+          :key="menu.Name"
+          :value="i"
+        >
           {{ menu.Name }}
         </option>
       </select>
+    </div>
 
+    <!-- Boutons globaux -->
+    <div>
       <button @click="toggleEditMode">
         {{ editMode ? 'Annuler les modifications' : 'Modifier le menu' }}
       </button>
-      <button v-if="editMode" @click="saveMenu">Sauvegarder</button>
-      <button v-if="editMode" @click="toggleForms">Afficher les formulaires</button>
+      <button v-if="editMode" @click="saveData">Sauvegarder</button>
+      <button v-if="editMode" @click="toggleForms">Afficher Formulaires</button>
+      <button @click="exportCSV">Exporter CSV</button>
     </div>
 
-    <!-- TABLEAU SI MENUS ET UN MENU SELECT -->
-    <table v-if="menus.length && selectedMenu">
-      <thead>
-        <tr>
-          <th v-for="jour in jours" :key="jour">{{ jour }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td
-            v-for="jour in jours"
-            :key="jour"
-            class="dropzone"
-            @dragover.prevent
-            @drop="handleDrop($event, jour)"
-          >
-            <div
-              v-for="(plat, index) in getPlatsParJour(jour)"
-              :key="plat.id"
-              class="draggable"
-              :draggable="editMode"
-              @dragstart="handleDragStart($event, plat)"
+    <!-- Affichage du menu sélectionné -->
+    <div v-if="currentMenu">
+      <table v-if="currentMenu.days?.length && currentMenu.categories?.length">
+        <thead>
+          <tr>
+            <th></th>
+            <th v-for="day in currentMenu.days" :key="day">{{ day }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="cat in currentMenu.categories" :key="cat.name">
+            <td><strong>{{ cat.name }}</strong></td>
+            <td
+              v-for="day in currentMenu.days"
+              :key="day"
+              class="dropzone"
+              @dragover.prevent
+              @drop="handleDrop($event, cat, day)"
             >
-              <span @click="toggleDetails(plat)">
-                {{ plat.name }}
-              </span>
-              <button v-if="editMode" @click="supprimerPlat(plat.id)">X</button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+              <div
+                v-for="(plat, index) in cat[day]"
+                :key="plat.id"
+                class="draggable"
+                :draggable="editMode"
+                :style="getPlatStyle(plat)"
+                @dragstart="handleDragStart($event, cat, day, index)"
+                @click="toggleDetails(plat)"
+              >
+                <span>{{ plat.name }}</span>
+                <button v-if="editMode" @click.stop="supprimerPlat(cat, day, index)">X</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p v-else>Aucun menu disponible</p>
 
-    <p v-else>Aucun menu disponible</p>
+      <!-- Détails du plat sélectionné -->
+      <div v-if="selectedPlat" class="plat-details">
+        <h2>Détails : {{ selectedPlat.name }}</h2>
+        <button @click="cyclePlatColor(selectedPlat)">
+          Couleur : {{ selectedPlat.color || 'aucune' }}
+        </button>
 
-    <!-- PRODUITS DU PLAT SELECTIONNE -->
-    <div v-if="selectedPlat">
-      <h3>Produits du plat: {{ selectedPlat.name }}</h3>
-      <ul>
-        <li v-for="product in selectedPlat.Products" :key="product">
-          {{ product }}
-        </li>
-      </ul>
-    </div>
+        <p v-if="selectedPlat.recette">
+          <strong>Recette : </strong>{{ selectedPlat.recette }}
+        </p>
+      </div>
 
-    <!-- Formulaires affichés UNIQUEMENT si on est en mode edit ET que showForms est true -->
-    <div v-if="editMode && showForms">
-      <!-- FORMULAIRE D'AJOUT DE PLAT -->
-      <form id="plat-form" @submit.prevent="addPlat">
-        <h2>Ajouter un Plat</h2>
-
-        <label for="plat-name">Nom du Plat :</label>
-        <input type="text" id="plat-name" v-model="newPlatName" required />
-
-        <label for="plat-people">Nombre de Personnes :</label>
-        <input type="number" id="plat-people" v-model="newPlatPeople" required />
-
-        <label for="plat-products">Produits :</label>
-        <select id="plat-products" multiple v-model="newPlatProducts">
-          <option
-            v-for="product in products"
-            :key="product.Name"
-            :value="product.Name"
+      <!-- Formulaires (onglets) -->
+      <div v-if="editMode && showForms" class="forms-container">
+        <div class="tabs">
+          <button
+            :class="{ active: selectedTab === 'new' }"
+            @click="selectedTab = 'new'"
           >
-            {{ product.Name }}
-          </option>
-        </select>
+            Nouveau Plat
+          </button>
+          <button
+            :class="{ active: selectedTab === 'existing' }"
+            @click="selectedTab = 'existing'"
+          >
+            Plat Existant
+          </button>
+        </div>
 
-        <button type="submit">Ajouter Plat</button>
-      </form>
+        <!-- Form : Nouveau Plat -->
+        <form
+          v-if="selectedTab === 'new'"
+          @submit.prevent="addPlatNew"
+          class="form-content"
+        >
+          <h3>Nouveau Plat</h3>
 
-      <!-- FORMULAIRE D'AJOUT DE PRODUIT -->
-      <form id="product-form" @submit.prevent="addProduct">
-        <h2>Ajouter un Produit</h2>
+          <label>Nom du Plat :</label>
+          <input type="text" v-model="newPlatName" required />
 
-        <label for="product-name">Nom du Produit :</label>
-        <input
-          type="text"
-          id="product-name"
-          v-model="newProductName"
-          required
-        />
+          <!-- On affiche TOUT LES PRODUITS (allProducts), pas ceux du current menu -->
+          <label>Produits :</label>
+          <select multiple v-model="newPlatProducts">
+            <option
+              v-for="product in allProducts"
+              :key="product.Name"
+              :value="product.Name"
+            >
+              {{ product.Name }}
+            </option>
+          </select>
 
-        <label for="product-quantity">Quantité :</label>
-        <input
-          type="number"
-          id="product-quantity"
-          v-model="newProductQuantity"
-          required
-        />
+          <label>Recette :</label>
+          <textarea v-model="newPlatRecipe" rows="3"></textarea>
 
-        <label for="product-date">Date de Commande :</label>
-        <select id="product-date" v-model="newProductDate">
-          <option value="viande">-7jours</option>
-          <option value="poisson">-6jours</option>
-          <option value="fruit_mer">-5jours</option>
-          <option value="legumes">-4jours</option>
-          <option value="fruits">-3jours</option>
-          <option value="condiments">-2jours</option>
-        </select>
+          <label>Catégorie :</label>
+          <select v-model="newPlatCategory">
+            <option
+              v-for="cat in currentMenu.categories"
+              :key="cat.name"
+              :value="cat.name"
+            >
+              {{ cat.name }}
+            </option>
+          </select>
 
-        <label for="product-type">Type de produit :</label>
-        <select id="product-type" v-model="newProductType">
-          <option value="viande">Viande</option>
-          <option value="poisson">Poisson</option>
-          <option value="fruit_mer">Fruit de mer</option>
-          <option value="legumes">Légumes</option>
-          <option value="fruits">Fruits</option>
-          <option value="condiments">Condiments</option>
-        </select>
+          <label>Jour :</label>
+          <select v-model="newPlatDay">
+            <option v-for="day in currentMenu.days" :key="day" :value="day">
+              {{ day }}
+            </option>
+          </select>
 
-        <button type="submit">Ajouter Produit</button>
-      </form>
+          <button type="submit">Ajouter Plat</button>
+        </form>
+
+        <!-- Form : Plat Existant (on retire la zone Produits) -->
+        <form
+          v-else-if="selectedTab === 'existing'"
+          @submit.prevent="addPlatExisting"
+          class="form-content"
+        >
+          <h3>Plat Existant (Tous les menus confondus)</h3>
+
+          <label>Choisir un plat :</label>
+          <select v-model="selectedExistingPlatName" @change="loadExistingPlatFields">
+            <option value="">-- Sélection --</option>
+            <option
+              v-for="p in allPlats"
+              :key="p.Name"
+              :value="p.Name"
+            >
+              {{ p.Name }}
+            </option>
+          </select>
+
+          <!-- On retire la zone Produits -->
+          <!-- On retire existingPlatProducts, n'est plus nécessaire -->
+
+          <!-- On peut laisser le champ Recette si tu veux le modifier -->
+          <label>Recette :</label>
+          <textarea v-model="existingPlatRecipe" rows="3"></textarea>
+
+          <label>Catégorie :</label>
+          <select v-model="existingPlatCategory">
+            <option
+              v-for="cat in currentMenu.categories"
+              :key="cat.name"
+              :value="cat.name"
+            >
+              {{ cat.name }}
+            </option>
+          </select>
+
+          <label>Jour :</label>
+          <select v-model="existingPlatDay">
+            <option
+              v-for="day in currentMenu.days"
+              :key="day"
+              :value="day"
+            >
+              {{ day }}
+            </option>
+          </select>
+
+          <button type="submit">Ajouter / Mettre à jour</button>
+        </form>
+
+        <!-- Form : Ajouter un Produit -->
+        <form @submit.prevent="addProduct" class="form-content">
+          <h3>Ajouter Produit</h3>
+
+          <label>Nom du Produit :</label>
+          <input type="text" v-model="newProductName" required />
+
+          <label>Date de Commande :</label>
+          <select v-model="newProductDate">
+            <option value="viande">-7jours</option>
+            <option value="poisson">-6jours</option>
+            <option value="fruit_mer">-5jours</option>
+            <option value="legumes">-4jours</option>
+            <option value="fruits">-3jours</option>
+            <option value="condiments">-2jours</option>
+          </select>
+
+          <label>Type de produit :</label>
+          <select v-model="newProductType">
+            <option value="viande">Viande</option>
+            <option value="poisson">Poisson</option>
+            <option value="fruit_mer">Fruit de mer</option>
+            <option value="legumes">Légumes</option>
+            <option value="fruits">Fruits</option>
+            <option value="condiments">Condiments</option>
+          </select>
+
+          <button type="submit">Ajouter Produit</button>
+        </form>
+      </div>
     </div>
+    <p v-else>Aucun menu sélectionné</p>
   </div>
 </template>
 
-<script>
-import { ref, onMounted, watch } from "vue";
+<script setup>
+import { ref, computed, onMounted } from 'vue'
 
-export default {
-  setup() {
-    const jours = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
-    const menus = ref([]);
-    const selectedMenu = ref(null);
-    const editMode = ref(false);
-    const selectedPlat = ref(null);
-    const originalMenus = ref([]);
+const dataFetched = ref({ menus: [] })
+const menus = computed(() => dataFetched.value.menus)
 
-    // Ajout d'un booléen pour afficher ou masquer les 2 formulaires
-    const showForms = ref(false);
+const selectedMenuIndex = ref(0)
+const currentMenu = computed(() => {
+  if (!menus.value.length) return null
+  return menus.value[selectedMenuIndex.value] || null
+})
 
-    // État pour le formulaire “ajouter un Plat”
-    const newPlatName = ref("");
-    const newPlatPeople = ref("");
-    const newPlatProducts = ref([]);
+const editMode = ref(false)
+const showForms = ref(false)
+const selectedPlat = ref(null)
+const selectedTab = ref('new')
 
-    // État pour le formulaire “ajouter un Produit”
-    const newProductName = ref("");
-    const newProductQuantity = ref("");
-    const newProductDate = ref("viande");
-    const newProductType = ref("viande");
+// ALL PRODUCTS => on va cumuler tous les products de tous les menus
+const allProducts = ref([])
 
-    // Liste globale de produits, chargée depuis le JSON
-    const products = ref([]);
+// CHAMPS NOUVEAU PLAT
+const newPlatName = ref('')
+const newPlatProducts = ref([])
+const newPlatRecipe = ref('')
+const newPlatCategory = ref('')
+const newPlatDay = ref('')
 
-    /**
-     * Récupère les données depuis l'API, puis enrichit chaque plat avec un id unique
-     * et les Products (depuis data.plats).
-     */
-    const fetchMenus = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/data");
-        if (!response.ok) {
-          throw new Error(`Erreur HTTP ${response.status}`);
-        }
-        const data = await response.json();
+// CHAMPS PLAT EXISTANT
+const selectedExistingPlatName = ref('')
+const existingPlatRecipe = ref('')
+const existingPlatCategory = ref('')
+const existingPlatDay = ref('')
 
-        // data = { products: [...], plats: [...], menus: [...] }
-        menus.value = data.menus || [];
-        products.value = data.products || [];
+// CHAMPS PRODUIT
+const newProductName = ref('')
+const newProductDate = ref('viande')
+const newProductType = ref('viande')
 
-        // Pour chaque menu, pour chaque Plat
-        menus.value.forEach((menu) => {
-          menu.Plats.forEach((plat) => {
-            // 1) Générer un id unique
-            plat.id = crypto.randomUUID
-              ? crypto.randomUUID()
-              : Date.now() + "-" + Math.random();
+// ALL PLATS => cumul de tous les plats
+const allPlats = ref([])
 
-            // 2) Enrichir avec .Products
-            const detail = data.plats.find((p) => p.Name === plat.name);
-            plat.Products = detail ? detail.Products : [];
-          });
-        });
+async function fetchAll() {
+  try {
+    const response = await fetch('http://localhost:3000/data')
+    if (!response.ok) throw new Error(`Erreur HTTP ${response.status}`)
+    const data = await response.json()
 
-        // Pour annuler si besoin
-        originalMenus.value = JSON.parse(JSON.stringify(menus.value));
-        if (menus.value.length) {
-          selectedMenu.value = menus.value[0].Name;
-        }
-      } catch (error) {
-        console.error("Erreur lors du chargement des menus:", error);
+    dataFetched.value = data
+
+    // On boucle sur chaque menu pour générer ID / color
+    dataFetched.value.menus.forEach(menu => {
+      menu.categories.forEach(cat => {
+        menu.days.forEach(day => {
+          cat[day] = cat[day] || []
+          cat[day].forEach(plat => {
+            if (!plat.id) {
+              plat.id = crypto.randomUUID
+                ? crypto.randomUUID()
+                : Date.now() + '-' + Math.random()
+            }
+            if (!plat.color) {
+              plat.color = ''
+            }
+          })
+        })
+      })
+    })
+
+    // Construire allProducts => cumuler le .products de chaque menu
+    const prodsSet = new Set()
+    const tmpProds = []
+    dataFetched.value.menus.forEach(menu => {
+      if (menu.products) {
+        menu.products.forEach(prod => {
+          if (!prodsSet.has(prod.Name)) {
+            prodsSet.add(prod.Name)
+            tmpProds.push(prod)
+          }
+        })
       }
-    };
+    })
+    allProducts.value = tmpProds
 
-    onMounted(fetchMenus);
-
-    /**
-     * Récupère la liste des plats d'un jour
-     */
-    const getPlatsParJour = (jour) => {
-      const menu = menus.value.find((m) => m.Name === selectedMenu.value);
-      if (!menu) return [];
-      return menu.Plats.filter(
-        (p) => p.jour.toLowerCase() === jour.toLowerCase()
-      );
-    };
-
-    /**
-     * Bascule / annule l’édition
-     */
-    const toggleEditMode = () => {
-      if (editMode.value) {
-        menus.value = JSON.parse(JSON.stringify(originalMenus.value));
+    // Construire allPlats => cumuler le .plats de chaque menu
+    const platsSet = new Set()
+    const tmpPlats = []
+    dataFetched.value.menus.forEach(menu => {
+      if (menu.plats) {
+        menu.plats.forEach(p => {
+          if (!platsSet.has(p.Name)) {
+            platsSet.add(p.Name)
+            tmpPlats.push(p)
+          }
+        })
       }
-      editMode.value = !editMode.value;
-      // Quand on ferme l'édition, on masque aussi les formulaires
-      if (!editMode.value) {
-        showForms.value = false;
-      }
-    };
+    })
+    allPlats.value = tmpPlats
 
-    /**
-     * Bascule l'affichage des 2 formulaires
-     */
-    const toggleForms = () => {
-      showForms.value = !showForms.value;
-    };
+    // Sélection par défaut
+    if (dataFetched.value.menus.length) {
+      selectedMenuIndex.value = 0
+    }
+  } catch (err) {
+    console.error('Erreur fetchAll:', err)
+  }
+}
 
-    /**
-     * DRAG START
-     */
-    const handleDragStart = (event, plat) => {
-      if (!editMode.value) return;
-      const payload = { id: plat.id };
-      event.dataTransfer.setData("application/json", JSON.stringify(payload));
-    };
+onMounted(fetchAll)
 
-    /**
-     * DROP
-     * On localise le plat par son id unique, on le retire, puis on modifie son jour
-     */
-    const handleDrop = (event, newJour) => {
-      if (!editMode.value) return;
-      try {
-        const data = JSON.parse(event.dataTransfer.getData("application/json"));
-        const menu = menus.value.find((m) => m.Name === selectedMenu.value);
-        if (!menu) return;
+/** 
+ * Boutons globaux
+ */
+function toggleEditMode() {
+  editMode.value = !editMode.value
+  if (!editMode.value) showForms.value = false
+}
+function toggleForms() {
+  showForms.value = !showForms.value
+  if (showForms.value) {
+    selectedTab.value = 'new'
+  }
+}
 
-        const platIndex = menu.Plats.findIndex((p) => p.id === data.id);
-        if (platIndex === -1) return;
+/** 
+ * DRAG & DROP
+ */
+function handleDragStart(evt, cat, day, index) {
+  if (!editMode.value) return
+  const payload = { catName: cat.name, day, index }
+  evt.dataTransfer.setData('application/json', JSON.stringify(payload))
+}
+function handleDrop(evt, cat, newDay) {
+  if (!editMode.value) return
+  if (!currentMenu.value) return
+  try {
+    const data = JSON.parse(evt.dataTransfer.getData('application/json'))
+    const originCat = currentMenu.value.categories.find(c => c.name === data.catName)
+    if (!originCat) return
+    const oldDay = data.day
+    const idx = data.index
+    const [movedPlat] = originCat[oldDay].splice(idx, 1)
+    movedPlat.jour = newDay
+    cat[newDay].push(movedPlat)
+  } catch (err) {
+    console.error('Erreur handleDrop:', err)
+  }
+}
 
-        const [movedPlat] = menu.Plats.splice(platIndex, 1);
-        movedPlat.jour = newJour;
-        menu.Plats.push(movedPlat);
-        menus.value = [...menus.value];
-      } catch (err) {
-        console.error("Erreur Drop:", err);
-      }
-    };
+/**
+ * toggleDetails
+ */
+function toggleDetails(plat) {
+  selectedPlat.value = (selectedPlat.value === plat) ? null : plat
+}
 
-    /**
-     * Affiche / masque les produits
-     */
-    const toggleDetails = (plat) => {
-      selectedPlat.value = selectedPlat.value === plat ? null : plat;
-    };
+/**
+ * Supprimer plat
+ */
+function supprimerPlat(cat, day, index) {
+  cat[day].splice(index, 1)
+}
 
-    /**
-     * Supprime un plat en le localisant par son id
-     */
-    const supprimerPlat = (platId) => {
-      const menu = menus.value.find((m) => m.Name === selectedMenu.value);
-      if (menu) {
-        const index = menu.Plats.findIndex((p) => p.id === platId);
-        if (index !== -1) {
-          menu.Plats.splice(index, 1);
-          menus.value = [...menus.value];
-        }
-      }
-    };
+/**
+ * cycle color
+ */
+function cyclePlatColor(plat) {
+  const colors = ['', 'vert', 'jaune', 'rouge']
+  const idx = colors.indexOf(plat.color)
+  plat.color = colors[(idx + 1) % colors.length]
+}
 
-    /**
-     * Sauvegarder
-     */
-    const saveMenu = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/save", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ menus: menus.value }),
-        });
-        if (!response.ok) {
-          throw new Error("Erreur lors de la sauvegarde");
-        }
-        originalMenus.value = JSON.parse(JSON.stringify(menus.value));
-        alert("Menu sauvegardé avec succès !");
-      } catch (error) {
-        console.error("Erreur lors de la sauvegarde du menu:", error);
-      }
-    };
+/**
+ * getPlatStyle
+ */
+function getPlatStyle(plat) {
+  let bg = '#f9f9f9'
+  if (plat.color === 'vert') bg = '#b1e0b5'
+  if (plat.color === 'jaune') bg = '#f7eb99'
+  if (plat.color === 'rouge') bg = '#f7a7a7'
+  return {
+    backgroundColor: bg,
+    margin: '4px 0',
+    padding: '4px 8px',
+    borderRadius: '4px',
+    cursor: 'grab'
+  }
+}
 
-    /**
-     * Ajoute un nouveau plat dans la liste globale data.plats et dans le menu sélectionné
-     */
-    const addPlat = () => {
-      if (!newPlatName.value) return alert("Veuillez saisir un nom de plat");
-      if (!newPlatPeople.value) return alert("Veuillez saisir un nombre de personnes");
-      const menu = menus.value.find((m) => m.Name === selectedMenu.value);
-      if (!menu) return;
+/**
+ * saveData
+ */
+async function saveData() {
+  try {
+    const response = await fetch('http://localhost:3000/data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dataFetched.value)
+    })
+    if (!response.ok) throw new Error('Erreur saveData')
+    alert('Menus sauvegardés !')
+  } catch (err) {
+    console.error('Erreur saveData:', err)
+  }
+}
 
-      // Générez un id unique
-      const newId = crypto.randomUUID
-        ? crypto.randomUUID()
-        : Date.now() + "-" + Math.random();
+/**
+ * addPlatNew
+ */
+async function addPlatNew() {
+  if (!currentMenu.value) return
+  if (!newPlatName.value) return alert('Saisir un nom de plat')
+  if (!newPlatCategory.value || !newPlatDay.value) {
+    return alert('Choisir cat + jour')
+  }
+  const cat = currentMenu.value.categories.find(c => c.name === newPlatCategory.value)
+  if (!cat) return
 
-      // On ajoute le plat
-      const newPlat = {
-        id: newId,
-        name: newPlatName.value,
-        jour: "lundi", // par défaut, à toi de choisir
-        Products: [...newPlatProducts.value], // copie
-      };
+  const newId = crypto.randomUUID
+    ? crypto.randomUUID()
+    : Date.now() + '-' + Math.random()
 
-      menu.Plats.push(newPlat);
-      menus.value = [...menus.value];
+  const newPlat = {
+    id: newId,
+    name: newPlatName.value,
+    Products: [...newPlatProducts.value],
+    recette: newPlatRecipe.value,
+    color: '',
+    jour: newPlatDay.value
+  }
+  cat[newPlatDay.value].push(newPlat)
 
-      // Réinitialisation du formulaire
-      newPlatName.value = "";
-      newPlatPeople.value = "";
-      newPlatProducts.value = [];
-      alert("Plat ajouté !");
-    };
+  // On l'ajoute dans .plats du currentMenu
+  currentMenu.value.plats.push({
+    Name: newPlatName.value,
+    Products: [...newPlatProducts.value],
+    recette: newPlatRecipe.value
+  })
 
-    /**
-     * Ajoute un produit dans data.products 
-     */
-    const addProduct = () => {
-      if (!newProductName.value) {
-        return alert("Veuillez saisir un nom de produit");
-      }
-      // Simple ajout dans la liste
-      products.value.push({
-        Name: newProductName.value,
-        Quantity: newProductQuantity.value,
-        DateOfCommand: newProductDate.value,
-        Type: newProductType.value,
-      });
-      alert("Produit ajouté !");
-      // Reset
-      newProductName.value = "";
-      newProductQuantity.value = "";
-      newProductDate.value = "viande";
-      newProductType.value = "viande";
-    };
+  // On l'ajoute dans allPlats si absent
+  if (!allPlats.value.find(x => x.Name === newPlatName.value)) {
+    allPlats.value.push({
+      Name: newPlatName.value,
+      Products: [...newPlatProducts.value],
+      recette: newPlatRecipe.value
+    })
+  }
 
-    // Quand on change de menu sélectionné
-    watch(selectedMenu, () => {
-      selectedPlat.value = null;
-    });
+  newPlatName.value = ''
+  newPlatProducts.value = []
+  newPlatRecipe.value = ''
 
-    return {
-      jours,
-      menus,
-      selectedMenu,
-      editMode,
-      selectedPlat,
-      originalMenus,
-      products,
-      showForms,
+  await saveData()
+  alert('Nouveau plat ajouté & sauvegardé.')
+}
 
-      // States pour new Plat
-      newPlatName,
-      newPlatPeople,
-      newPlatProducts,
+/**
+ * addPlatExisting 
+ * On supprime la zone Produits => on n'a plus existingPlatProducts
+ * Juste la recette, cat, day
+ */
+async function addPlatExisting() {
+  if (!currentMenu.value) return
+  if (!selectedExistingPlatName.value) {
+    return alert('Sélectionnez un plat existant')
+  }
+  if (!existingPlatCategory.value || !existingPlatDay.value) {
+    return alert('Choisir cat + jour')
+  }
 
-      // States pour new Product
-      newProductName,
-      newProductQuantity,
-      newProductDate,
-      newProductType,
+  // On trouve le plat dans allPlats
+  const detail = allPlats.value.find(p => p.Name === selectedExistingPlatName.value)
+  if (!detail) {
+    return alert('Plat introuvable dans allPlats')
+  }
 
-      // Méthodes
-      getPlatsParJour,
-      toggleEditMode,
-      toggleForms,
-      handleDragStart,
-      handleDrop,
-      toggleDetails,
-      supprimerPlat,
-      saveMenu,
-      addPlat,
-      addProduct,
-    };
-  },
-};
+  const newId = crypto.randomUUID
+    ? crypto.randomUUID()
+    : Date.now() + '-' + Math.random()
+
+  const cat = currentMenu.value.categories.find(c => c.name === existingPlatCategory.value)
+  if (!cat) return
+
+  // On crée un nouveau plat à insérer
+  const newPlat = {
+    id: newId,
+    name: detail.Name,
+    Products: detail.Products ? [...detail.Products] : [], // si tu veux y mettre ou pas
+    recette: existingPlatRecipe.value || detail.recette || '',
+    color: '',
+    jour: existingPlatDay.value
+  }
+  cat[existingPlatDay.value].push(newPlat)
+
+  // On peut mettre à jour la recette dans detail si tu veux
+  detail.recette = existingPlatRecipe.value || detail.recette
+
+  // On l'ajoute dans currentMenu.value.plats s'il n'existe pas déjà
+  if (!currentMenu.value.plats.find(p => p.Name === detail.Name)) {
+    currentMenu.value.plats.push(detail)
+  }
+
+  // reset
+  selectedExistingPlatName.value = ''
+  existingPlatRecipe.value = ''
+  existingPlatCategory.value = ''
+  existingPlatDay.value = ''
+
+  await saveData()
+  alert('Plat existant ajouté / mis à jour & sauvegardé.')
+}
+
+/**
+ * loadExistingPlatFields 
+ * => On ne charge plus de Products, car tu dis “supprimer la zone produits”
+ */
+function loadExistingPlatFields() {
+  const detail = allPlats.value.find(p => p.Name === selectedExistingPlatName.value)
+  if (!detail) {
+    existingPlatRecipe.value = ''
+    return
+  }
+  existingPlatRecipe.value = detail.recette || ''
+}
+
+/**
+ * addProduct
+ */
+async function addProduct() {
+  if (!currentMenu.value) return
+  if (!newProductName.value) {
+    return alert('Saisir un nom de produit')
+  }
+  currentMenu.value.products.push({
+    Name: newProductName.value,
+    DateOfCommand: newProductDate.value,
+    Type: newProductType.value
+  })
+
+  // On l'ajoute dans allProducts s'il n'y est pas
+  if (!allProducts.value.find(x => x.Name === newProductName.value)) {
+    allProducts.value.push({
+      Name: newProductName.value,
+      DateOfCommand: newProductDate.value,
+      Type: newProductType.value
+    })
+  }
+
+  newProductName.value = ''
+  newProductDate.value = 'viande'
+  newProductType.value = 'viande'
+
+  await saveData()
+  alert('Produit ajouté & sauvegardé')
+}
+
+/**
+ * exportCSV
+ */
+function exportCSV() {
+  if (!currentMenu.value) return
+  let csv = 'Catégorie,Jour,Nom,Couleur,Recette\\r\\n'
+  const cm = currentMenu.value
+
+  cm.categories.forEach(cat => {
+    cm.days.forEach(day => {
+      ;(cat[day] || []).forEach(plat => {
+        const catName = cat.name.replace(/\"/g, '\"\"')
+        const d = day.replace(/\"/g, '\"\"')
+        const nm = plat.name.replace(/\"/g, '\"\"')
+        const clr = (plat.color || '').replace(/\"/g, '\"\"')
+        const rct = (plat.recette || '').replace(/\"/g, '\"\"')
+        csv += `"${catName}","${d}","${nm}","${clr}","${rct}"\\r\\n`
+      })
+    })
+  })
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.setAttribute('download', cm.Name.replace(/ /g, '_') + '.csv')
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+  alert('CSV exporté pour ' + cm.Name)
+}
 </script>
 
 <style scoped>

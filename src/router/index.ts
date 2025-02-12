@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Menus from '../views/Menus.vue'
+import menuVueTelephonne from '../views/menuVueTelephonne.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,6 +15,11 @@ const router = createRouter({
       path: '/Menus',
       name: 'Menus',
       component: Menus,
+    },
+    {
+      path: '/menuVueTelephonne',
+      name: 'menuVueTelephonne',
+      component: menuVueTelephonne,
     },
     {
       path: '/about',

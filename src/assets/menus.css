@@ -1,114 +1,161 @@
-@import './base.css';
-
-body {
-  font-family: sans-serif; /* Police sans-serif moderne */
-  margin: 20px;
-  background-color: #f4f4f4; /* Fond légèrement gris */
-  color: #333; /* Texte sombre pour le contraste */
+/* =============================
+   TABLEAU
+============================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
 }
 
-h1 {
-  text-align: center; /* Titre centré */
-  margin-bottom: 20px;
-  color: #007bff; /* Couleur bleue pour le titre */
+table thead tr {
+  background-color: #eee; /* plus contrasté que #f3f3f3 */
 }
 
-label {
-  display: block; /* Étiquettes au-dessus des éléments */
-  margin-bottom: 5px;
-}
-
-select,
-button {
+table th,
+table td {
+  border: 1px solid #ddd;
   padding: 8px 12px;
-  margin-bottom: 10px;
+  text-align: left;
+  color: black;
+}
+
+/* Survol plus franc */
+table tbody tr:hover {
+  background-color: #242121;
+}
+
+/* =============================
+   FORMULAIRES
+============================= */
+form {
+  background-color: #fff; /* sur fond blanc pour meilleur contraste */
+  border: 1px solid #ccc;
+  padding: 16px;
+  margin: 20px 0;
+  border-radius: 5px;
+}
+
+form h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+form label {
+  display: block;
+  margin: 8px 0 4px;
+  font-weight: 600;
+  color: #222;
+}
+
+form input[type="text"],
+form input[type="number"],
+form select {
+  width: 100%;
+  padding: 8px;
+  font-size: 0.9rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  box-sizing: border-box; /* Important pour le padding et la bordure */
-  font-size: 16px;
+  box-sizing: border-box;
+  color: #333;
+  background-color: #fff;
 }
 
-button {
-  background-color: #007bff; /* Boutons bleus */
-  color: white;
+form button[type="submit"],
+form button[type="button"] {
+  background-color: #2a8e63; /* plus sombre que #42b983 */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 14px;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: background-color 0.3s ease; /* Transition au hover */
+  margin-top: 10px;
+}
+
+form button[type="submit"]:hover,
+form button[type="button"]:hover {
+  background-color: #267c58; /* hover plus sombre */
+}
+
+/* =============================
+   BOUTONS
+============================= */
+button {
+  background-color: #2a8e63; /* plus sombre pour un meilleur contraste */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 14px;
+  margin: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
 }
 
 button:hover {
-  background-color: #0056b3; /* Bleu plus foncé au hover */
+  background-color: #267c58; /* hover plus sombre */
 }
 
-/* Styles du tableau */
-table {
-  width: 80vw;
-  border-collapse: collapse;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre légère */
-  background-color: white; /* Fond blanc pour le tableau */
-  border-radius: 8px; /* Bords arrondis */
-  overflow: hidden; /* Important pour les bords arrondis avec box-shadow */
+/* =============================
+   DRAG & DROP
+============================= */
+.draggable {
+  cursor: grab;
+  background-color: grey;
+  padding: 8px 12px;
+  margin: 5px 0;
+  border-radius: 5px;
+  transition: background-color 0.2s ease;
+  color: #333; /* texte plus sombre */
 }
 
-th,
-td {
-  border: 1px solid #ddd; /* Bords gris clair */
-  padding: 12px 15px; /* Espacement intérieur plus généreux */
-  text-align: left;
-  vertical-align: top;
+/* Met un léger effet au survol pour repérer le plat */
+.draggable:hover {
+  background-color: #242121;
 }
 
-th {
-  background-color: #007bff; /* En-tête bleu */
-  color: white;
-  font-weight: 600; /* Texte en gras */
-  text-transform: uppercase; /* En-tête en majuscules */
-}
-
-tr:nth-child(even) {
-  background-color: #f9f9f9; /* Lignes paires légèrement grisées */
-}
-
-/* Styles pour le drag and drop */
 .dropzone {
-  border: 2px dashed #ccc;
   min-height: 50px;
-  padding: 5px;
-  transition: border-color 0.3s ease; /* Transition pour la bordure */
+  border: 2px dashed grey;
+  padding: 10px;
+  vertical-align: top;
+  transition: border-color 0.2s ease;
 }
 
 .dropzone:hover {
-  border-color: #007bff; /* Bordure bleue au hover */
+  border-color: #8e392a;
 }
 
-.draggable {
-  cursor: move;
-  background-color: #e6f2ff; /* Fond bleu clair pour les éléments draggable */
-  padding: 5px;
-  margin: 2px 0; /* Marge pour séparer les éléments */
-  border-radius: 4px;
-  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1); /* Ombre légère */
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+/* =============================
+   PRODUITS
+============================= */
+h3 {
+  margin-top: 1.5rem;
+  color: #333;
 }
 
-.draggable:hover {
-  transform: scale(1.02); /* Légère augmentation de taille au hover */
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+ul {
+  list-style: disc;
+  margin-left: 20px;
+  margin-top: 10px;
 }
 
-#addproducts{
-  display: flex;
-  margin-top: 5vh;
+li {
+  margin: 4px 0;
 }
-#plat-form{
-  margin-right: 5vw;
+
+/* =============================
+   SECTION HEADER
+============================= */
+h1 {
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  color: #2a8e63; /* rappeler la couleur principale */
 }
-/* Responsive design (pour les petits écrans) */
-@media (max-width: 768px) {
-  table {
-    font-size: 14px; /* Taille de police plus petite sur les petits écrans */
-  }
-  th,
-  td {
-    padding: 8px 10px;
-  }
+
+label[for='menu-selector'] {
+  margin-right: 8px;
+  font-weight: 600;
+  color: #333;
 }
