@@ -63,7 +63,7 @@ export default {
 
     const calendarOptions: CalendarOptions = {
       plugins: [dayGridPlugin, interactionPlugin, bootstrap5Plugin],
-      initialView: 'dayGridMonth',
+      initialView: 'dayGridWeek',
       eventOrder: 'type',
       events: props.events,
       eventDidMount: (arg) => {
