@@ -17,7 +17,7 @@ export default {
   },
   props: {
     events: {
-      type: Array as () => any,
+      type: Object as any,
       required: true,
     },
   },
@@ -26,12 +26,30 @@ export default {
       emit('modal:create', arg)
     }
     const eventClick = (arg: EventClickArg) => {
-      emit('modal:edit', arg)
+      const el = arg.el.childNodes[0].childNodes[1] as HTMLElement
+      el.style.display === 'none' ? (el.style.display = 'block') : (el.style.display = 'none')
     }
     const calendarOptions: CalendarOptions = {
       plugins: [dayGridPlugin, interactionPlugin, bootstrap5Plugin],
       initialView: 'dayGridMonth',
+      eventOrder: 'type',
       events: props.events,
+      eventDidMount: (arg) => {
+        let icon = document.createElement('i')
+        icon.classList.add('bi', 'bi-pencil-fill', 'pe-1')
+        icon.addEventListener('click', (event) => {
+          event.stopPropagation()
+          emit('modal:edit', arg)
+        })
+        arg.el.childNodes[0].childNodes[0].appendChild(icon)
+
+        let desc = document.createElement('p')
+        desc.classList.add('description')
+        desc.textContent = 'lalala'
+        desc.style.display = 'none'
+
+        arg.el.childNodes[0].appendChild(desc)
+      },
       weekends: false,
       selectable: true,
       editable: true,

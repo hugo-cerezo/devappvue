@@ -1,5 +1,5 @@
-import './assets/main.css'
-import './assets/menus.css'
+// import './assets/main.css'
+// import './assets/menus.css'
 import GoogleSignInPlugin from 'vue3-google-signin'
 import { GOOGLE_CLIENT_ID } from './config/constant'
 import { BootstrapIconsPlugin } from 'bootstrap-icons-vue'
