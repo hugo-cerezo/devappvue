@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AddEvent from './forms/AddEvent.vue'
 import EditEvent from './forms/EditEvent.vue'
+import Description from '@/views/Description.vue'
 
 const props = defineProps<{
   show: boolean
@@ -9,9 +10,14 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits(['modal:show', 'form:add', 'form:edit', 'form:remove'])
+
+const hideModal = (event: MouseEvent) => {
+  const target = (event.target as HTMLElement).className
+  if (target === 'modal') emit('modal:show', !props.show)
+}
 </script>
 <template>
-  <div class="modal" v-show="props.show">
+  <div class="modal" v-show="props.show" @click="(event: MouseEvent) => hideModal(event)">
     <div class="modal-content">
       <slot name="modal-slot-content">
         <AddEvent
@@ -27,6 +33,8 @@ const emit = defineEmits(['modal:show', 'form:add', 'form:edit', 'form:remove'])
           @confirm="(values: any) => emit('form:edit', values)"
           @remove="emit('form:remove')"
         />
+
+        <Description v-if="props.type == 'show:description'" :events="props.event" />
       </slot>
     </div>
   </div>
