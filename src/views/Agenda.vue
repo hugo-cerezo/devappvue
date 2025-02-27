@@ -5,6 +5,17 @@ import { ref } from 'vue'
 import type { DateClickArg } from '@fullcalendar/interaction/index.js'
 import type { CalendarEvent } from '@/config/interfaces'
 
+/** A SUPPRIMER */
+const today = new Date()
+const month = () => {
+  if (today.getMonth().toString().length < 2) {
+    let currMonth = today.getMonth() + 1
+    return '0' + currMonth
+  } else {
+    return today.getMonth().toString()
+  }
+}
+
 const show = ref(false)
 const type = ref('')
 const selectedCalendarEvent = ref()
@@ -14,7 +25,7 @@ const events = ref<CalendarEvent[]>([
   {
     title: 'Croissant',
     fullDay: true,
-    date: '2025-02-11',
+    date: '2025-' + month() + '-' + today.getDate(), // A supprimer
     type: 0,
     color: 'red',
     extendedProps: {
@@ -45,8 +56,81 @@ const events = ref<CalendarEvent[]>([
       ],
     },
   },
-  { title: 'Pizza', fullDay: true, date: '2025-02-11', type: 1, color: 'green' },
-  { title: 'Glace', fullDay: true, date: '2025-02-11', type: 2, color: 'blue' },
+  {
+    title: 'Pizza',
+    fullDay: true,
+    date: '2025-' + month() + '-' + today.getDate(), // A supprimer
+    type: 1,
+    color: 'green',
+    extendedProps: {
+      ingredients: [
+        {
+          name: 'fromage râpé (mozzarella ou mélange mozza/cheddar/parmesan recommandés)',
+          quantity: 200,
+          weight: 'g',
+        },
+        {
+          name: 'sauce tomate pour pâtes/pizza (épicée ou non selon votre goût)',
+          quantity: 20,
+          weight: 'cl',
+        },
+        { name: 'poivre', quantity: 1, weight: 'pincée' },
+        { name: 'sel', quantity: 2, weight: 'pincée' },
+        { name: 'bicarbonate', quantity: 0.5, weight: 'cuillère à café' },
+        { name: 'levure à pain', quantity: 1, weight: 'sachet' },
+        { name: 'Farine à pizza (blanche ou complète)', quantity: 300, weight: 'g' },
+        { name: 'eau', quantity: 20, weight: 'cl' },
+        { name: 'viande (bœuf haché ou non, dès de poulet...)', quantity: 250, weight: 'g' },
+        { name: 'herbes de Provence', quantity: 1, weight: 'pincée' },
+        { name: 'olives noires dénoyautées', quantity: 8, weight: 'pcs' },
+        { name: "sel d'ail ou poudre d'ail", quantity: 2, weight: 'pincées' },
+        { name: 'paprika', quantity: 2, weight: 'pincées' },
+      ],
+      recipe: [
+        "Dans un saladier, placez les 300 g de farine, puis la levure, puis le bicarbonate de soude, la pincée de sel et celle de poivre. Ajoutez aussi le paprika et le sel d'ail selon votre goût. Mélangez à sec pour homogénéiser les ingrédients.",
+        "Versez ensuite la moitié des 20 cl d'eau, remuez avec votre doigt. Versez enfin le reste de l'eau puis remuez, lorsque la pâte est collante, utilisez votre main pour mélanger le tout, jusqu'à obtenir une pâte collante sans reste de farine.",
+        "Ajoutez alors un peu de farine à la main, mélangez et pétrissez. Recommencez l'opération (farine plus pétrissage) jusqu'à obtenir une boule de pâte que ne colle plus.",
+        'Mettez un peu de farine au fond de votre saladier et sur ses côtés, puis remettez la boule dedans, et couvrez avec un torchon propre.',
+        'Laissez reposer la pâte environ 2 heures (ou moins voire pas du tout si vous êtes pressés).',
+        'Préparation de la pizza. Mettez votre four à préchauffer à 220°C. Sur votre plan de travail, étalez un peu de farine afin que la boule de colle pas.',
+        "Saupoudrez votre boule d'un peu de farine et sortez là du saladier. Avec un rouleau à pâtisserie, faites-en un disque d'environ 35 cm de diamètre.",
+        'Posez la pâte ainsi formée sur votre plaque, avec en dessous du papier sulfurisé ou à défaut de la farine, pour que la pâte ne reste pas collée sur la plaque à la cuisson.',
+        "Étalez la sauce tomate sur la pâte, jusqu'à ne presque plus voir la pâte au travers (2 à 3 mm d'épaisseur de sauce).",
+        "Repartissez ensuite la viande sur la surface. Faites de même avec le fromage, jusqu'à couvrir correctement toute la surface. Enfin placez les olives. Saupoudrez d'une belle pincée d'herbes de Provence.",
+        'Enfournez au milieu du four pendant 8 min pour une pâte moelleuse, 10 à 12 min pour une pâte plus croustillante.',
+        'Sortez la pizza quand le fromage est bien fondu et commence à faire des bulles et à dorer. Découpez et servez.',
+      ],
+    },
+  },
+  {
+    title: 'Glace à la vanille',
+    fullDay: true,
+    date: '2025-' + month() + '-' + today.getDate(), // A supprimer
+    type: 2,
+    color: 'blue',
+    extendedProps: {
+      ingredients: [
+        { name: 'sucre roux', quantity: 4, weight: 'cuillères à soupe' },
+        { name: 'oeufs', quantity: 3, weight: 'pcs' },
+        { name: 'crème liquide (type fleurette)', quantity: 250, weight: 'g' },
+        {
+          name: 'sucre vanillé de bourbon ou extrait de vanille liquide',
+          quantity: 2,
+          weight: 'sachets',
+        },
+      ],
+      recipe: [
+        'Dans un grand saladier, mettre les jaunes d’œufs avec le sucre de canne et le sucre vanillé. Les battre jusqu’a obtenir un mélange blanchâtre.',
+        'Dans un second saladier, monter la crème fraîche en chantilly avec un glaçon. (Mettre la crème fraîche 30 mn au congélateur).',
+        'Dans un troisième saladier, battre les blancs en neige bien fermes.',
+        'Ajouter le second saladier dans le premier en mélangeant délicatement.',
+        'Ajouter le troisième saladier dans le premier en mélangeant délicatement.',
+        'Verser dans des petits ramequins en aluminium ou dans de grandes barquettes.',
+        'Mettre au congélateur pendant 24 à 48 H.',
+        'Servir avec du chocolat chaud ou du caramel, ou encore un coulis de fruits.',
+      ],
+    },
+  },
 ])
 
 const handleCreate = (newDate: any) => {

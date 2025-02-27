@@ -14,7 +14,7 @@ let recipe = event.events.event.extendedProps.recipe
     <div>
       <h5>Recette</h5>
       <p v-for="(i, l) in recipe">
-        <h6>Etape: {{ l }}</h6>
+        <h6>Etape: {{ l + 1 }}</h6>
         <span>{{ i }}</span>
       </p>
     </div>
