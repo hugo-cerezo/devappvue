@@ -28,6 +28,8 @@ const handleCancel = () => {
   emit('cancel')
   clear()
 }
+
+const productSelect = ref([])
 </script>
 
 <template>
@@ -51,13 +53,13 @@ const handleCancel = () => {
   <section v-if="selectedAction === 'new'">
     <div class="border rounded p-2 mb-2 form-group">
       <div class="mb-2">
-        <AddMeal />
+        <AddMeal @change="(event) => (name = event.target.value)" />
         <MealType @change="(event) => (mealType = event.target.value)" />
       </div>
       <div class="border rounded p-2 mb-2 form-group">
         <label for="" class="mb-3">Produits</label>
-        <ProductList :products="[]" />
-        <ExistingProductSelect />
+        <ProductList :values="productSelect" />
+        <ExistingProductSelect v-model="productSelect" />
         <AddProduct />
       </div>
     </div>
