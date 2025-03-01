@@ -7,6 +7,7 @@ import MealType from './fragments/MealType.vue'
 import ProductList from './fragments/ProductList.vue'
 import AddProduct from './fragments/AddProduct.vue'
 import ExistingProductSelect from './fragments/ExistingProductSelect.vue'
+import ExistingProducts from './fragments/ExistingProducts.vue'
 import AddMeal from './fragments/AddMeal.vue'
 
 const emit = defineEmits(['cancel', 'confirm'])
@@ -59,7 +60,8 @@ const productSelect = ref([])
       <div class="border rounded p-2 mb-2 form-group">
         <label for="" class="mb-3">Produits</label>
         <ProductList :values="productSelect" />
-        <ExistingProductSelect v-model="productSelect" />
+        <ExistingProducts />
+        <!-- <ExistingProductSelect v-model="productSelect" /> -->
         <AddProduct />
       </div>
     </div>

@@ -1,16 +1,8 @@
+import { dateFormater } from '@/helpers/dateFormater'
+
 // Replace with your own client ID (this is a test client ID from Enzo's account)
 export const GOOGLE_CLIENT_ID =
   '531767569977-p791pp677m3j5h2sto6m9fqb91lat0qi.apps.googleusercontent.com'
-
-const today = new Date()
-const month = () => {
-  if (today.getMonth().toString().length < 2) {
-    let currMonth = today.getMonth() + 1
-    return '0' + currMonth
-  } else {
-    return today.getMonth().toString()
-  }
-}
 
 export const FAKE_RECIPE = [
   {
@@ -108,11 +100,13 @@ export const FAKE_RECIPE = [
     ],
   },
 ]
+
+let date = new dateFormater()
 export const FAKE_EVENTS = [
   {
     title: 'Croissant',
     fullDay: true,
-    date: '2025-' + month() + '-' + today.getDate(), // A supprimer
+    date: date.getFormatedDate(),
     type: 0,
     color: 'red',
     extendedProps: {
@@ -146,7 +140,7 @@ export const FAKE_EVENTS = [
   {
     title: 'Pizza',
     fullDay: true,
-    date: '2025-' + month() + '-' + today.getDate(), // A supprimer
+    date: date.getFormatedDate(),
     type: 1,
     color: 'green',
     extendedProps: {
@@ -192,7 +186,7 @@ export const FAKE_EVENTS = [
   {
     title: 'Glace à la vanille',
     fullDay: true,
-    date: '2025-' + month() + '-' + today.getDate(), // A supprimer
+    date: date.getFormatedDate(),
     type: 2,
     color: 'blue',
     extendedProps: {
@@ -220,20 +214,22 @@ export const FAKE_EVENTS = [
   },
 ]
 
+export const FAKE_PRODUCTS_TYPES = ['meat', 'fish', 'vegetable', 'fruit', 'spice', 'other']
 export interface FakeProducts {
   id: number
   name: string
   quantity: number
   weight: string
+  type: 'meat' | 'fish' | 'vegetable' | 'fruit' | 'spice' | 'other'
 }
 
 export const FAKE_PRODUCTS: FakeProducts[] = [
-  { id: 0, name: 'sel', quantity: 1, weight: 'g' },
-  { id: 1, name: 'levure', quantity: 1, weight: 'g' },
-  { id: 2, name: 'farine', quantity: 1, weight: 'g' },
-  { id: 3, name: 'eau', quantity: 1, weight: 'c.à.s.' },
-  { id: 4, name: 'sucre', quantity: 1, weight: 'g' },
-  { id: 5, name: 'beurre', quantity: 1, weight: 'g' },
-  { id: 6, name: 'lait', quantity: 1, weight: 'cl' },
-  { id: 7, name: 'oeuf', quantity: 1, weight: 'pcs' },
+  { id: 0, name: 'sel', quantity: 1, weight: 'g', type: 'spice' },
+  { id: 1, name: 'levure', quantity: 1, weight: 'g', type: 'other' },
+  { id: 2, name: 'farine', quantity: 1, weight: 'g', type: 'other' },
+  { id: 3, name: 'eau', quantity: 1, weight: 'c.à.s.', type: 'other' },
+  { id: 4, name: 'sucre', quantity: 1, weight: 'g', type: 'spice' },
+  { id: 5, name: 'beurre', quantity: 1, weight: 'g', type: 'other' },
+  { id: 6, name: 'lait', quantity: 1, weight: 'cl', type: 'other' },
+  { id: 7, name: 'oeuf', quantity: 1, weight: 'pcs', type: 'meat' },
 ]

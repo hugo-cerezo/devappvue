@@ -79,7 +79,7 @@ export default {
         node.prepend(iconType)
         node.appendChild(editIcon)
       },
-      weekends: false,
+      weekends: true,
       selectable: true,
       editable: true,
       locale: 'fr',
