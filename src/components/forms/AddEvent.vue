@@ -2,35 +2,40 @@
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import { ref } from 'vue'
-import { FAKE_RECIPE } from '@/config/constant'
+import { FAKE_RECIPE, type FakeProducts } from '@/config/constant'
 import MealType from './fragments/MealType.vue'
 import ProductList from './fragments/ProductList.vue'
 import AddProduct from './fragments/AddProduct.vue'
-import ExistingProductSelect from './fragments/ExistingProductSelect.vue'
 import ExistingProducts from './fragments/ExistingProducts.vue'
-import AddMeal from './fragments/AddMeal.vue'
 
 const emit = defineEmits(['cancel', 'confirm'])
-const name = ref('')
 const selectedAction = ref('existing')
 const selectedExistingEntry = ref(null)
-const mealType = ref('')
+
+const name = ref('')
+const type = ref([])
+const products = ref<FakeProducts[]>([])
 
 const clear = () => {
   name.value = ''
 }
-const handleConfirm = () => {
-  console.log(selectedExistingEntry)
+const confirm = () => {
+  console.log(name, type, products)
   return
   emit('confirm', { title: name.value, fullDay: true })
   clear()
 }
-const handleCancel = () => {
+const cancel = () => {
   emit('cancel')
   clear()
 }
 
-const productSelect = ref([])
+const removeProduct = (product: FakeProducts) => {
+  products.value.splice(
+    products.value.findIndex((p) => p.name === product.name),
+    1,
+  )
+}
 </script>
 
 <template>
@@ -54,21 +59,23 @@ const productSelect = ref([])
   <section v-if="selectedAction === 'new'">
     <div class="border rounded p-2 mb-2 form-group">
       <div class="mb-2">
-        <AddMeal @change="(event) => (name = event.target.value)" />
-        <MealType @change="(event) => (mealType = event.target.value)" />
+        <div class="mb-2">
+          <label for="" class="mb-3">Nouveau plat</label>
+          <input type="text" placeholder="Nom" v-model="name" class="form-control" />
+        </div>
+        <MealType @update="(d) => (type = d)" />
       </div>
       <div class="border rounded p-2 mb-2 form-group">
         <label for="" class="mb-3">Produits</label>
-        <ProductList :values="productSelect" />
-        <ExistingProducts />
-        <!-- <ExistingProductSelect v-model="productSelect" /> -->
+        <ProductList :values="products" @remove="removeProduct" />
+        <ExistingProducts :values="products" @update="(checked: any) => (products = checked)" />
         <AddProduct />
       </div>
     </div>
   </section>
 
   <div class="d-flex justify-content-end mt-2">
-    <button class="btn btn-primary me-1" @click="handleConfirm">Confirm</button>
-    <button class="btn btn-danger" @click="handleCancel">Cancel</button>
+    <button class="btn btn-primary me-1" @click="confirm">Confirm</button>
+    <button class="btn btn-danger" @click="cancel">Cancel</button>
   </div>
 </template>

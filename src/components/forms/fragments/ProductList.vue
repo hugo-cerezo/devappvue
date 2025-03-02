@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-interface Product {
-  name: string
-}
-
 const props = defineProps<{
-  values: Product[]
+  values: any[]
 }>()
+const emit = defineEmits(['remove'])
+
 </script>
 <template>
   <div id="product-list" class="w-100 border rounded mb-2">
@@ -14,8 +11,9 @@ const props = defineProps<{
       <div
         v-for="product in props.values"
         class="product-list-item border rounded d-flex justify-content-center m-1"
+        @click="$emit('remove', product)"
       >
-        <span>{{ product.name }}</span>
+        <span class="text-capitalize">{{ product.name }}</span>
       </div>
     </div>
   </div>

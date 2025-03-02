@@ -4,6 +4,20 @@ import { dateFormater } from '@/helpers/dateFormater'
 export const GOOGLE_CLIENT_ID =
   '531767569977-p791pp677m3j5h2sto6m9fqb91lat0qi.apps.googleusercontent.com'
 
+export const MEAL_TYPES = [
+  {
+    id: 0,
+    name: 'Entrée',
+  },
+  {
+    id: 1,
+    name: 'Plat',
+  },
+  {
+    id: 2,
+    name: 'Déssert',
+  },
+]
 export const FAKE_RECIPE = [
   {
     title: 'Croissant',
@@ -214,22 +228,22 @@ export const FAKE_EVENTS = [
   },
 ]
 
-export const FAKE_PRODUCTS_TYPES = ['meat', 'fish', 'vegetable', 'fruit', 'spice', 'other']
+export const FAKE_PRODUCTS_TYPES = ['viande', 'poisson', 'légume', 'fruit', 'épice', 'autre']
 export interface FakeProducts {
   id: number
   name: string
   quantity: number
   weight: string
-  type: 'meat' | 'fish' | 'vegetable' | 'fruit' | 'spice' | 'other'
+  type: 'viande' | 'poisson' | 'légume' | 'fruit' | 'épice' | 'autre'
 }
 
 export const FAKE_PRODUCTS: FakeProducts[] = [
-  { id: 0, name: 'sel', quantity: 1, weight: 'g', type: 'spice' },
-  { id: 1, name: 'levure', quantity: 1, weight: 'g', type: 'other' },
-  { id: 2, name: 'farine', quantity: 1, weight: 'g', type: 'other' },
-  { id: 3, name: 'eau', quantity: 1, weight: 'c.à.s.', type: 'other' },
-  { id: 4, name: 'sucre', quantity: 1, weight: 'g', type: 'spice' },
-  { id: 5, name: 'beurre', quantity: 1, weight: 'g', type: 'other' },
-  { id: 6, name: 'lait', quantity: 1, weight: 'cl', type: 'other' },
-  { id: 7, name: 'oeuf', quantity: 1, weight: 'pcs', type: 'meat' },
+  { id: 0, name: 'sel', quantity: 1, weight: 'g', type: 'épice' },
+  { id: 1, name: 'levure', quantity: 1, weight: 'g', type: 'autre' },
+  { id: 2, name: 'farine', quantity: 1, weight: 'g', type: 'autre' },
+  { id: 3, name: 'eau', quantity: 1, weight: 'c.à.s.', type: 'autre' },
+  { id: 4, name: 'sucre', quantity: 1, weight: 'g', type: 'épice' },
+  { id: 5, name: 'beurre', quantity: 1, weight: 'g', type: 'autre' },
+  { id: 6, name: 'lait', quantity: 1, weight: 'cl', type: 'autre' },
+  { id: 7, name: 'oeuf', quantity: 1, weight: 'pcs', type: 'viande' },
 ]
