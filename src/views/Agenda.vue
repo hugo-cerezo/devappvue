@@ -3,19 +3,8 @@ import Calendar from '@/components/Calendar.vue'
 import Modal from '@/components/Modal.vue'
 import { ref } from 'vue'
 import type { DateClickArg } from '@fullcalendar/interaction/index.js'
-import type { CalendarEvent } from '@/config/interfaces'
+import Sidebar from '@/components/Sidebar.vue'
 import { FAKE_EVENTS } from '@/config/constant'
-
-/** A SUPPRIMER */
-const today = new Date()
-const month = () => {
-  if (today.getMonth().toString().length < 2) {
-    let currMonth = today.getMonth() + 1
-    return '0' + currMonth
-  } else {
-    return today.getMonth().toString()
-  }
-}
 
 const show = ref(false)
 const type = ref('')
@@ -64,7 +53,7 @@ const handleDescribe = (event: any) => {
     "
     @form:remove="(selectedCalendarEvent.event.remove(), (show = false))"
   />
-
+  <Sidebar />
   <Calendar
     :events="events"
     @modal:create="(newDate) => handleCreate(newDate)"

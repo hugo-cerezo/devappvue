@@ -118,6 +118,7 @@ export const FAKE_RECIPE = [
 let date = new dateFormater()
 export const FAKE_EVENTS = [
   {
+    id: 0,
     title: 'Croissant',
     fullDay: true,
     date: date.getFormatedDate(),
@@ -152,6 +153,7 @@ export const FAKE_EVENTS = [
     },
   },
   {
+    id: 1,
     title: 'Pizza',
     fullDay: true,
     date: date.getFormatedDate(),
@@ -198,6 +200,7 @@ export const FAKE_EVENTS = [
     },
   },
   {
+    id: 2,
     title: 'Glace à la vanille',
     fullDay: true,
     date: date.getFormatedDate(),

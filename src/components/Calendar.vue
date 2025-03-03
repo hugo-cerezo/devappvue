@@ -6,14 +6,16 @@ import interactionPlugin from '@fullcalendar/interaction'
 import type { DateClickArg } from '@fullcalendar/interaction'
 import type { CalendarOptions, EventClickArg } from '@fullcalendar/core/index.js'
 
+import { defineIconType } from '@/helpers/calendarIcons'
+
 import bootstrap5Plugin from '@fullcalendar/bootstrap5'
 // import the third-party stylesheets directly from your JS
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-icons/font/bootstrap-icons.css' // needs additional webpack config!
 
-import saladUrl from '@/assets/icons/salad.png'
-import foodUrl from '@/assets/icons/food.png'
-import desertUrl from '@/assets/icons/dessert.png'
+// import saladUrl from '@/assets/icons/salad.png'
+// import foodUrl from '@/assets/icons/food.png'
+// import desertUrl from '@/assets/icons/dessert.png'
 
 export default {
   components: {
@@ -34,35 +36,36 @@ export default {
       emit('modal:describe', arg)
     }
 
-    const defineIconType = (event: any) => {
-      switch (event.extendedProps.type) {
-        case 0:
-          let saladIcon = document.createElement('img')
-          saladIcon.src = saladUrl
-          saladIcon.style.height = '18px'
-          saladIcon.classList.add('my-1')
-          return saladIcon
-        case 1:
-          let foodIcon = document.createElement('img')
-          foodIcon.src = foodUrl
-          foodIcon.style.height = '18px'
-          foodIcon.classList.add('my-1')
-          return foodIcon
-        case 2:
-          let desertIcon = document.createElement('img')
-          desertIcon.src = desertUrl
-          desertIcon.style.height = '18px'
-          desertIcon.classList.add('my-1')
-          return desertIcon
-        default:
-          let error = document.createElement('i')
-          error.classList.add('bi', 'bi-bug-fill', 'my-1')
-          return error
-      }
-    }
+    // const defineIconType = (event: any) => {
+    //   switch (event.extendedProps.type) {
+    //     case 0:
+    //       let saladIcon = document.createElement('img')
+    //       saladIcon.src = saladUrl
+    //       saladIcon.style.height = '18px'
+    //       saladIcon.classList.add('my-1')
+    //       return saladIcon
+    //     case 1:
+    //       let foodIcon = document.createElement('img')
+    //       foodIcon.src = foodUrl
+    //       foodIcon.style.height = '18px'
+    //       foodIcon.classList.add('my-1')
+    //       return foodIcon
+    //     case 2:
+    //       let desertIcon = document.createElement('img')
+    //       desertIcon.src = desertUrl
+    //       desertIcon.style.height = '18px'
+    //       desertIcon.classList.add('my-1')
+    //       return desertIcon
+    //     default:
+    //       let error = document.createElement('i')
+    //       error.classList.add('bi', 'bi-bug-fill', 'my-1')
+    //       return error
+    //   }
+    // }
 
     const calendarOptions: CalendarOptions = {
       plugins: [dayGridPlugin, interactionPlugin, bootstrap5Plugin],
+      droppable: true,
       initialView: 'dayGridWeek',
       eventOrder: 'type',
       events: props.events,
@@ -78,6 +81,9 @@ export default {
 
         node.prepend(iconType)
         node.appendChild(editIcon)
+      },
+      drop(arg) {
+        console.log('event dropped', arg)
       },
       weekends: true,
       selectable: true,
