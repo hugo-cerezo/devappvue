@@ -1,10 +1,11 @@
-import type { Plats } from '@/config/interfaces'
-import type { Ingredients } from '@/config/interfaces'
+import type { Meals } from '@/config/interfaces'
+import type { Products } from '@/config/interfaces'
+
 export default {
-  // GET: Retrieve all plats
-  async getPlats() {
+  // GET: Retrieve all meals
+  async getMeals() {
     try {
-      const response = await fetch('https://localhost:7286/api/Plats')
+      const response = await fetch('https://localhost:7286/api/Meals')
       if (!response.ok) {
         throw new Error(`Erreur HTTP ${response.status}`)
       }
@@ -17,15 +18,15 @@ export default {
     }
   },
 
-  // POST: Create a new plat
-  async createPlat(Plats: Plats) {
+  // POST: Create a new meal
+  async createMeals(Meals: Meals) {
     try {
-      const response = await fetch('https://localhost:7286/api/Plats', {
+      const response = await fetch('https://localhost:7286/api/Meals', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(Plats),
+        body: JSON.stringify(Meals),
       })
       if (!response.ok) {
         throw new Error(`Erreur HTTP ${response.status}`)
@@ -39,15 +40,15 @@ export default {
     }
   },
 
-  // PUT: Update an existing plat by ID
-  async updatePlat(id: Plats['id'], Plats: Plats) {
+  // PUT: Update an existing meal by ID
+  async updateMeals(id: Meals['id'], Meals: Meals) {
     try {
-      const response = await fetch(`https://localhost:7286/api/Plats/${id}`, {
+      const response = await fetch(`https://localhost:7286/api/Meals/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(Plats),
+        body: JSON.stringify(Meals),
       })
       if (!response.ok) {
         throw new Error(`Erreur HTTP ${response.status}`)
@@ -62,9 +63,9 @@ export default {
   },
 
   // DELETE: Remove a plat by ID
-  async deletePlat(id: Plats['id']) {
+  async deleteMeals(id: Meals['id']) {
     try {
-      const response = await fetch(`https://localhost:7286/api/Plats/${id}`, {
+      const response = await fetch(`https://localhost:7286/api/Meals/${id}`, {
         method: 'DELETE',
       })
       if (!response.ok) {
@@ -77,9 +78,9 @@ export default {
       throw error
     }
   },
-  async getIngredients() {
+  async getProducts() {
     try {
-      const response = await fetch('https://localhost:7286/api/Ingredients')
+      const response = await fetch('https://localhost:7286/api/Products')
       if (!response.ok) {
         throw new Error(`Erreur HTTP ${response.status}`)
       }
@@ -93,14 +94,14 @@ export default {
   },
 
   // POST: Create a new plat
-  async createIngredients(Ingredients: Ingredients) {
+  async createProducts(Products: Products) {
     try {
-      const response = await fetch('https://localhost:7286/api/Ingredients', {
+      const response = await fetch('https://localhost:7286/api/Products', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(Ingredients),
+        body: JSON.stringify(Products),
       })
       if (!response.ok) {
         throw new Error(`Erreur HTTP ${response.status}`)
@@ -115,14 +116,14 @@ export default {
   },
 
   // PUT: Update an existing plat by ID
-  async updateIngredients(id: Ingredients['id'], Ingredients: Ingredients) {
+  async updateProducts(id: Products['id'], Products: Products) {
     try {
-      const response = await fetch(`https://localhost:7286/api/Ingredients/${id}`, {
+      const response = await fetch(`https://localhost:7286/api/Products/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(Ingredients),
+        body: JSON.stringify(Products),
       })
       if (!response.ok) {
         throw new Error(`Erreur HTTP ${response.status}`)
@@ -137,9 +138,9 @@ export default {
   },
 
   // DELETE: Remove a plat by ID
-  async deleteIngredients(id: Ingredients['id']) {
+  async deleteProducts(id: Products['id']) {
     try {
-      const response = await fetch(`https://localhost:7286/api/Ingredients/${id}`, {
+      const response = await fetch(`https://localhost:7286/api/Products/${id}`, {
         method: 'DELETE',
       })
       if (!response.ok) {

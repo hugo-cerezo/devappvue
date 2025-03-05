@@ -10,29 +10,32 @@ export interface CalendarEvent {
   type: number
   color: string
   extendedProps?: {
-    ingredients: Ingredients[]
+    ingredients: Products[]
     recipe: string[]
   }
 }
-export interface Plats {
+
+export interface MealsType {
   id: number
   name: string
-  ingredients: Ingredients[]
+}
+export interface Meals {
+  id: string
+  name: string
+  products: Products[]
   recipe: string[]
-  color: number
-  day: Date
-  categorie: number
+  type: MealsType
+  customerSuccess: number
 }
-export interface Ingredients {
+
+export interface ProductsType {
   id: number
   name: string
-  dateOfCommand: number
-  categorie: number
+}
+export interface Products {
+  id: string
+  name: string
+  orderDelay: number
+  type: ProductsType[]
   season: number
-}
-export interface Menus {
-  id: number
-  name: string
-  plats: Plats[]
-  date: Date
 }
