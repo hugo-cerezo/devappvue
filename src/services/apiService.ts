@@ -2,22 +2,6 @@ import type { Meals } from '@/config/interfaces'
 import type { Products } from '@/config/interfaces'
 
 export default {
-  // GET: Retrieve all meals
-  async getMeals() {
-    try {
-      const response = await fetch('https://localhost:7286/api/Meals')
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP ${response.status}`)
-      }
-      const data = await response.json()
-      console.log('GET plats:', data)
-      return data
-    } catch (error) {
-      console.error('GET plats error:', error)
-      throw error
-    }
-  },
-
   // POST: Create a new meal
   async createMeals(Meals: Meals) {
     try {
@@ -36,6 +20,21 @@ export default {
       return data
     } catch (error) {
       console.error('POST createPlat error:', error)
+      throw error
+    }
+  },
+  // GET: Retrieve all meals
+  async getMeals() {
+    try {
+      const response = await fetch('https://localhost:7286/api/Meals')
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP ${response.status}`)
+      }
+      const data = await response.json()
+      console.log('GET plats:', data)
+      return data
+    } catch (error) {
+      console.error('GET plats error:', error)
       throw error
     }
   },
@@ -78,20 +77,6 @@ export default {
       throw error
     }
   },
-  async getProducts() {
-    try {
-      const response = await fetch('https://localhost:7286/api/Products')
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP ${response.status}`)
-      }
-      const data = await response.json()
-      console.log('GET plats:', data)
-      return data
-    } catch (error) {
-      console.error('GET plats error:', error)
-      throw error
-    }
-  },
 
   // POST: Create a new plat
   async createProducts(Products: Products) {
@@ -111,6 +96,22 @@ export default {
       return data
     } catch (error) {
       console.error('POST createPlat error:', error)
+      throw error
+    }
+  },
+
+  async getProducts() {
+    try {
+      const response = await fetch('https://localhost:7286/api/Products')
+      console.log(response)
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP ${response.status}`)
+      }
+      const data = await response.json()
+      console.log('GET plats:', data)
+      return data
+    } catch (error) {
+      console.error('GET plats error:', error)
       throw error
     }
   },

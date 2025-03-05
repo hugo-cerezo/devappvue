@@ -2,8 +2,11 @@
 import { FAKE_PRODUCTS } from '@/config/constant'
 import { FAKE_PRODUCTS_TYPES } from '@/config/constant'
 import { ref, watch } from 'vue'
+import apiService from '@/services/apiService'
+import type { Products } from '@/config/interfaces'
 
-const products = ref(FAKE_PRODUCTS)
+// const products = ref(FAKE_PRODUCTS)
+const products = ref(apiService.getProducts())
 const props = defineProps(['values'])
 const checked = ref(props.values)
 const emit = defineEmits(['update'])
