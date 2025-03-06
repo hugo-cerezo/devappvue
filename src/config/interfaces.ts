@@ -36,6 +36,6 @@ export interface Products {
   id: string
   name: string
   orderDelay: number
-  type: ProductsType[]
+  type: ProductsType
   season: number
 }

@@ -231,22 +231,4 @@ export const FAKE_EVENTS = [
   },
 ]
 
-export const FAKE_PRODUCTS_TYPES = ['viande', 'poisson', 'légume', 'fruit', 'épice', 'autre']
-export interface FakeProducts {
-  id: number
-  name: string
-  quantity: number
-  weight: string
-  type: 'viande' | 'poisson' | 'légume' | 'fruit' | 'épice' | 'autre'
-}
-
-export const FAKE_PRODUCTS: FakeProducts[] = [
-  { id: 0, name: 'sel', quantity: 1, weight: 'g', type: 'épice' },
-  { id: 1, name: 'levure', quantity: 1, weight: 'g', type: 'autre' },
-  { id: 2, name: 'farine', quantity: 1, weight: 'g', type: 'autre' },
-  { id: 3, name: 'eau', quantity: 1, weight: 'c.à.s.', type: 'autre' },
-  { id: 4, name: 'sucre', quantity: 1, weight: 'g', type: 'épice' },
-  { id: 5, name: 'beurre', quantity: 1, weight: 'g', type: 'autre' },
-  { id: 6, name: 'lait', quantity: 1, weight: 'cl', type: 'autre' },
-  { id: 7, name: 'oeuf', quantity: 1, weight: 'pcs', type: 'viande' },
-]
+export const PRODUCTS_TYPES = ['viande', 'poisson', 'légume', 'fruit', 'épice', 'autre']

@@ -3,6 +3,8 @@ import { FAKE_EVENTS } from '@/config/constant'
 import { onMounted, ref } from 'vue'
 import { Draggable } from '@fullcalendar/interaction/index.js'
 const meals = ref(FAKE_EVENTS)
+
+
 onMounted(() => {
   meals.value?.forEach((event, i) => {
     let el = document.getElementById(event.id.toString())
@@ -15,7 +17,7 @@ onMounted(() => {
 <template>
   <div class="col-2 me-1">
     <div class="border h-100">
-      <p>Plats Existant</p>
+      <p>Menus</p>
       <div class="wrapper">
         <div v-for="meal in meals" class="p-1 text-center">
           <div :id="meal.id.toString()" class="item rounded">

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FAKE_PRODUCTS_TYPES } from '@/config/constant'
+import { PRODUCTS_TYPES } from '@/config/constant'
 </script>
 <template>
   <div class="border rounded p-2 mb-2 form-group">
@@ -7,7 +7,7 @@ import { FAKE_PRODUCTS_TYPES } from '@/config/constant'
     <input type="text" placeholder="Nom" class="form-control mb-2" />
     <div class="border rounded p-2 mb-2 form-group">
       <div class="d-flex">
-        <div class="me-1" v-for="type in FAKE_PRODUCTS_TYPES">
+        <div class="me-1" v-for="type in PRODUCTS_TYPES">
           <label class="text-capitalize" for="meat">{{ type }}</label>
           <input class="form-check-input ms-1" type="checkbox" :name="type" />
         </div>

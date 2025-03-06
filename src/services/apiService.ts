@@ -103,15 +103,13 @@ export default {
   async getProducts() {
     try {
       const response = await fetch('https://localhost:7286/api/Products')
-      console.log(response)
       if (!response.ok) {
         throw new Error(`Erreur HTTP ${response.status}`)
       }
       const data = await response.json()
-      console.log('GET plats:', data)
       return data
     } catch (error) {
-      console.error('GET plats error:', error)
+      console.error('getProducts error:', error)
       throw error
     }
   },
