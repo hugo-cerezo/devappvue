@@ -7,12 +7,15 @@ export interface CalendarEvent {
   title: string
   fullDay: boolean
   date: string
-  type: number
-  color: string
-  extendedProps?: {
-    ingredients: Products[]
-    recipe: string[]
-  }
+  id: string
+  eventType: EventType
+  color: number
+  meal: Meals
+}
+
+export interface EventType {
+  id: number
+  name: string
 }
 
 export interface MealsType {

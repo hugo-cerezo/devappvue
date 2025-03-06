@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { FAKE_RECIPE } from '@/config/constant'
 import MealType from './fragments/MealType.vue'
 import ProductList from './fragments/ProductList.vue'
 import AddProduct from './fragments/AddProduct.vue'
 import ExistingProducts from './fragments/ExistingProducts.vue'
 import type { Products } from '@/config/interfaces'
+import apiService from '@/services/apiService'
+import type { Meals } from '@/config/interfaces'
 
 const emit = defineEmits(['cancel', 'confirm'])
 const selectedAction = ref('existing')
@@ -16,6 +18,7 @@ const selectedExistingEntry = ref(null)
 const name = ref('')
 const type = ref([])
 const products = ref<Products[]>([])
+var meals = ref<Meals[]>([])
 
 const clear = () => {
   name.value = ''
@@ -23,8 +26,6 @@ const clear = () => {
 const confirm = () => {
   console.log(name, type, products)
   return
-  emit('confirm', { title: name.value, fullDay: true })
-  clear()
 }
 const cancel = () => {
   emit('cancel')
@@ -37,24 +38,27 @@ const removeProduct = (product: Products) => {
     1,
   )
 }
+onMounted(async () => {
+  const data = await apiService.getMeals()
+  if (data) {
+    meals.value = data
+  }
+})
 </script>
 
 <template>
   <section v-if="selectedAction === 'existing'">
     <div class="form-group mb-2">
       <select name="existing-entry" class="form-select">
+        <!-- peux etre faire un systeme de filtre celon le type de plat  -->
+        <!-- pour affiner la recherche checkbox au desus du options ? -->
         <option selected :value="null">Plat existant</option>
-        <option v-for="recipe in FAKE_RECIPE" :value="recipe" :v-model="selectedExistingEntry">
-          {{ recipe.title }}
+        <option v-for="meal in meals" :value="meal" :v-model="selectedExistingEntry">
+          {{ meal.name }}
         </option>
       </select>
     </div>
-    <input
-      type="button"
-      value="Créer un nouveau plat"
-      class="btn btn-primary w-100"
-      @click="selectedAction = 'new'"
-    />
+    <input type="button" value="Créer un nouveau plat" class="btn btn-primary w-100" @click="selectedAction = 'new'" />
   </section>
 
   <section v-if="selectedAction === 'new'">
