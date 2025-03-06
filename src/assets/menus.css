@@ -1,110 +1,161 @@
-@import './base.css';
+/* =============================
+   TABLEAU
+============================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
 
-body {
-    font-family: sans-serif;
-    margin: 20px;
-    background-color: grey;
-    color: #333;
-  }
+table thead tr {
+  background-color: #eee; /* plus contrasté que #f3f3f3 */
+}
 
-  h1,
-  h2 {
-    text-align: center;
-    color: #007bff;
-    margin-bottom: 20px;
-  }
+table th,
+table td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  text-align: left;
+  color: black;
+}
 
-  h2 {
-    font-size: 1.5em;
-    margin-top: 20px;
-  }
+/* Survol plus franc */
+table tbody tr:hover {
+  background-color: #242121;
+}
 
-  form {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px; /* Ajoute de l'espace entre les formulaires */
-  }
+/* =============================
+   FORMULAIRES
+============================= */
+form {
+  background-color: #fff; /* sur fond blanc pour meilleur contraste */
+  border: 1px solid #ccc;
+  padding: 16px;
+  margin: 20px 0;
+  border-radius: 5px;
+}
 
-  label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500; /* Légèrement plus gras */
-  }
+form h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
 
-  input[type="text"],
-  input[type="number"],
-  input[type="date"],
-  select {
-    width: calc(
-      100% - 22px
-    ); /* Ajuste la largeur pour inclure le padding et la bordure */
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 16px;
-  }
+form label {
+  display: block;
+  margin: 8px 0 4px;
+  font-weight: 600;
+  color: #222;
+}
 
-  select[multiple] {
-    height: 100px; /* Hauteur fixe pour le select multiple */
-    overflow-y: auto;
-  }
+form input[type="text"],
+form input[type="number"],
+form select {
+  width: 100%;
+  padding: 8px;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: #333;
+  background-color: #fff;
+}
 
-  button[type="button"] {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-  }
+form button[type="submit"],
+form button[type="button"] {
+  background-color: #2a8e63; /* plus sombre que #42b983 */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-top: 10px;
+}
 
-  button[type="button"]:hover {
-    background-color: #0056b3;
-  }
+form button[type="submit"]:hover,
+form button[type="button"]:hover {
+  background-color: #267c58; /* hover plus sombre */
+}
 
-  #menu-plats-container {
-    display: flex;
-    gap: 10px; /* Espacement entre les select */
-    margin-bottom: 15px;
-  }
+/* =============================
+   BOUTONS
+============================= */
+button {
+  background-color: #2a8e63; /* plus sombre pour un meilleur contraste */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 14px;
+  margin: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
 
-  #menu-list {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-  }
+button:hover {
+  background-color: #267c58; /* hover plus sombre */
+}
 
-  #menu-list ul {
-    list-style-type: none; /* Supprime les puces de liste */
-    padding: 0;
-  }
+/* =============================
+   DRAG & DROP
+============================= */
+.draggable {
+  cursor: grab;
+  background-color: grey;
+  padding: 8px 12px;
+  margin: 5px 0;
+  border-radius: 5px;
+  transition: background-color 0.2s ease;
+  color: #333; /* texte plus sombre */
+}
 
-  #menu-list li {
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #f9f9f9;
-  }
+/* Met un léger effet au survol pour repérer le plat */
+.draggable:hover {
+  background-color: #242121;
+}
 
-  /* Responsive design */
-  @media (max-width: 768px) {
-    #menu-plats-container {
-      flex-direction: column; /* Passe en colonne sur les petits écrans */
-    }
-    input[type="text"],
-    input[type="number"],
-    input[type="date"],
-    select,
-    button[type="button"] {
-      font-size: 14px;
-    }
-  }
+.dropzone {
+  min-height: 50px;
+  border: 2px dashed grey;
+  padding: 10px;
+  vertical-align: top;
+  transition: border-color 0.2s ease;
+}
+
+.dropzone:hover {
+  border-color: #8e392a;
+}
+
+/* =============================
+   PRODUITS
+============================= */
+h3 {
+  margin-top: 1.5rem;
+  color: #333;
+}
+
+ul {
+  list-style: disc;
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+li {
+  margin: 4px 0;
+}
+
+/* =============================
+   SECTION HEADER
+============================= */
+h1 {
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  color: #2a8e63; /* rappeler la couleur principale */
+}
+
+label[for='menu-selector'] {
+  margin-right: 8px;
+  font-weight: 600;
+  color: #333;
+}
