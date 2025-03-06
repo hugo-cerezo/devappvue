@@ -2,11 +2,12 @@
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import { ref } from 'vue'
-import { FAKE_RECIPE, type FakeProducts } from '@/config/constant'
+import { FAKE_RECIPE } from '@/config/constant'
 import MealType from './fragments/MealType.vue'
 import ProductList from './fragments/ProductList.vue'
 import AddProduct from './fragments/AddProduct.vue'
 import ExistingProducts from './fragments/ExistingProducts.vue'
+import type { Products } from '@/config/interfaces'
 
 const emit = defineEmits(['cancel', 'confirm'])
 const selectedAction = ref('existing')
@@ -14,7 +15,7 @@ const selectedExistingEntry = ref(null)
 
 const name = ref('')
 const type = ref([])
-const products = ref<FakeProducts[]>([])
+const products = ref<Products[]>([])
 
 const clear = () => {
   name.value = ''
@@ -30,7 +31,7 @@ const cancel = () => {
   clear()
 }
 
-const removeProduct = (product: FakeProducts) => {
+const removeProduct = (product: Products) => {
   products.value.splice(
     products.value.findIndex((p) => p.name === product.name),
     1,

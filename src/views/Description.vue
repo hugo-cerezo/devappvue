@@ -13,10 +13,10 @@ let recipe = event.events.event.extendedProps.recipe
     </div>
     <div>
       <h5>Recette</h5>
-      <p v-for="(i, l) in recipe">
+      <div v-for="(i, l) in recipe">
         <h6>Etape: {{ l + 1 }}</h6>
         <span>{{ i }}</span>
-      </p>
+      </div>
     </div>
   </div>
 </template>
