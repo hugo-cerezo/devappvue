@@ -500,9 +500,39 @@ const MENUS = [
           },
         ],
       },
+      {
+        starter: [{ id: '67c97bed0361520f65a31fae', name: 'Onion rings' }],
+        mainCourse: [
+          {
+            id: '67c97b5e0361520f65a31f92',
+            name: 'Pizza margherita',
+          },
+        ],
+        dessert: [
+          {
+            id: '67c97bc20361520f65a31fa1',
+            name: 'Vanilla ice cream',
+          },
+        ],
+      },
+      {
+        starter: [{ id: '67c97bed0361520f65a31fae', name: 'Onion rings' }],
+        mainCourse: [
+          {
+            id: '67c97b5e0361520f65a31f92',
+            name: 'Pizza margherita',
+          },
+        ],
+        dessert: [
+          {
+            id: '67c97bc20361520f65a31fa1',
+            name: 'Vanilla ice cream',
+          },
+        ],
+      },
     ],
   },
-    {
+  {
     id: '67c97bed0361520f65a31def',
     name: 'Menu 2',
     days: [
@@ -558,6 +588,7 @@ onMounted(() => {
   background-color: blue;
   /* cursor: pointer; */
 }
+
 .wrapper {
   display: grid;
   grid-template-columns: repeat(2, 50%);

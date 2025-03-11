@@ -20,19 +20,12 @@ const hideModal = (event: MouseEvent) => {
   <div class="modal" v-show="props.show" @click="(event: MouseEvent) => hideModal(event)">
     <div class="modal-content">
       <slot name="modal-slot-content">
-        <AddEvent
-          v-if="props.type == 'form:add'"
-          @cancel="emit('modal:show', false)"
-          @confirm="(values: any) => emit('form:add', values)"
-        />
+        <AddEvent v-if="props.type == 'form:add'" @cancel="emit('modal:show', false)"
+          @confirm="(values: any) => emit('form:add', values)" />
 
-        <EditEvent
-          v-if="props.type == 'form:edit' && props.event"
-          :data="props.event"
-          @cancel="() => emit('modal:show', false)"
-          @confirm="(values: any) => emit('form:edit', values)"
-          @remove="emit('form:remove')"
-        />
+        <EditEvent v-if="props.type == 'form:edit' && props.event" :data="props.event"
+          @cancel="() => emit('modal:show', false)" @confirm="(values: any) => emit('form:edit', values)"
+          @remove="emit('form:remove')" />
 
         <Description v-if="props.type == 'show:description'" :events="props.event" />
       </slot>

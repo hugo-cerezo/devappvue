@@ -39,6 +39,22 @@ export default {
     }
   },
 
+  // GET: Retrieve a meal by name
+  async getMealByName(name: string) {
+    try {
+      const response = await fetch(`https://localhost:7286/api/Meals/${name}`)
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP ${response.status}`)
+      }
+      const data = await response.json()
+      console.log('GET plats:', data)
+      return data
+    } catch (error) {
+      console.error('GET plats error:', error)
+      throw error
+    }
+  },
+
   // PUT: Update an existing meal by ID
   async updateMeals(id: Meals['id'], Meals: Meals) {
     try {
