@@ -53,6 +53,7 @@ const insertMenu = (event: any) => {
         },
       }
       // api.createEvent(data)
+      console.log(data);
       events.value.push(data)
     })
     day.mainCourse.forEach((mainCourse: any) => {
