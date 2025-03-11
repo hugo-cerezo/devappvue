@@ -5,13 +5,16 @@ import { ref } from 'vue'
 import type { DateClickArg } from '@fullcalendar/interaction/index.js'
 import Sidebar from '@/components/Sidebar.vue'
 import { FAKE_EVENTS } from '@/config/constant'
+import { dateFormater } from '@/helpers/dateFormater'
+import apiService from '@/services/apiService'
+import type { CalendarEvent } from '@/config/interfaces'
 
 const show = ref(false)
 const type = ref('')
 const selectedCalendarEvent = ref()
 const date = ref<DateClickArg>()
 
-const events = ref(FAKE_EVENTS)
+const events = ref<CalendarEvent[]>(FAKE_EVENTS)
 
 const handleCreate = (newDate: any) => {
   date.value = newDate
@@ -29,6 +32,60 @@ const handleDescribe = (event: any) => {
   selectedCalendarEvent.value = event
   type.value = 'show:description'
   show.value = true
+}
+
+const insertMenu = (event: any) => {
+  const formater = new dateFormater()
+  const menu = event.extendedProps
+  const api = apiService
+
+  menu.days.forEach((day: any) => {
+    day.starter.forEach((starter: any) => {
+      const data = {
+        title: `${starter.name}`,
+        date: formater.getFormatedDate(event.start),
+        fullDay: true,
+        type: 0,
+        color: 'red',
+        extendedProps: {
+          ingredients: [],
+          recipe: [],
+        },
+      }
+      // api.createEvent(data)
+      events.value.push(data)
+    })
+    day.mainCourse.forEach((mainCourse: any) => {
+      const data = {
+        title: `${mainCourse.name}`,
+        date: formater.getFormatedDate(event.start),
+        fullDay: true,
+        type: 1,
+        color: 'blue',
+        extendedProps: {
+          ingredients: [],
+          recipe: [],
+        },
+      }
+      // api.createEvent(data)
+      events.value.push(data)
+    })
+    day.dessert.forEach((dessert: any) => {
+      const data = {
+        title: `${dessert.name}`,
+        date: formater.getFormatedDate(event.start),
+        fullDay: true,
+        type: 2,
+        color: 'green',
+        extendedProps: {
+          ingredients: [],
+          recipe: [],
+        },
+      }
+      // api.createEvent(data)
+      events.value.push(data)
+    })
+  })
 }
 </script>
 
@@ -59,5 +116,6 @@ const handleDescribe = (event: any) => {
     @modal:create="(newDate) => handleCreate(newDate)"
     @modal:edit="(event) => handleEdit(event)"
     @modal:describe="(event) => handleDescribe(event)"
+    @menus:add="(arg) => insertMenu(arg)"
   />
 </template>

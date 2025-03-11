@@ -152,4 +152,17 @@ export default {
       throw error
     }
   },
+
+  async getMenus() {
+    try {
+      const response = await fetch('https://localhost:7286/api/Menus')
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP ${response.status}`)
+      }
+      const data = await response.json()
+      return data
+    } catch (error) {
+      console.log('GET menus error:', error)
+    }
+  },
 }

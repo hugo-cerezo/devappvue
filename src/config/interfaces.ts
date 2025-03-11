@@ -3,16 +3,43 @@
 //   quantity: number
 //   weight: string
 // }
+// export interface CalendarEvent {
+//   title: string
+//   fullDay: boolean
+//   date: string
+//   type: number
+//   color: string
+//   extendedProps?: {
+//     ingredients: Products[]
+//     recipe: string[]
+//   }
+// }
+
 export interface CalendarEvent {
+  id?: string
+  groupId?: string
+  allDay?: boolean
+  start: Date
+  end?: Date
+  startStr?: string
+  endStr?: string
   title: string
-  fullDay: boolean
-  date: string
-  type: number
-  color: string
+  url?: string
+  classNames?: string[]
+  editable?: boolean
+  startEditable?: boolean
+  durationEditable?: boolean
+  resourceEditable?: boolean
+  display?: 'auto' | 'block' | 'list-item' | 'background' | 'inverse-background' | 'none'
+  overlap?: boolean
+  constraint?: string
+  backgroundColor?: string
+  borderColor?: string
+  textColor?: string
   extendedProps?: {
-    ingredients: Products[]
-    recipe: string[]
+    [key: string]: any
   }
+  source?: string
 }
 
 export interface MealsType {

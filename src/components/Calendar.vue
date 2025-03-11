@@ -2,7 +2,6 @@
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
-
 import type { DateClickArg } from '@fullcalendar/interaction'
 import type { CalendarOptions, EventClickArg } from '@fullcalendar/core/index.js'
 
@@ -36,39 +35,13 @@ export default {
       emit('modal:describe', arg)
     }
 
-    // const defineIconType = (event: any) => {
-    //   switch (event.extendedProps.type) {
-    //     case 0:
-    //       let saladIcon = document.createElement('img')
-    //       saladIcon.src = saladUrl
-    //       saladIcon.style.height = '18px'
-    //       saladIcon.classList.add('my-1')
-    //       return saladIcon
-    //     case 1:
-    //       let foodIcon = document.createElement('img')
-    //       foodIcon.src = foodUrl
-    //       foodIcon.style.height = '18px'
-    //       foodIcon.classList.add('my-1')
-    //       return foodIcon
-    //     case 2:
-    //       let desertIcon = document.createElement('img')
-    //       desertIcon.src = desertUrl
-    //       desertIcon.style.height = '18px'
-    //       desertIcon.classList.add('my-1')
-    //       return desertIcon
-    //     default:
-    //       let error = document.createElement('i')
-    //       error.classList.add('bi', 'bi-bug-fill', 'my-1')
-    //       return error
-    //   }
-    // }
-
     const calendarOptions: CalendarOptions = {
       plugins: [dayGridPlugin, interactionPlugin, bootstrap5Plugin],
       droppable: true,
       initialView: 'dayGridWeek',
       eventOrder: 'type',
       events: props.events,
+      eventDurationEditable: false,
       eventDidMount: (arg) => {
         const node = arg.el.childNodes[0].childNodes[0] as HTMLElement
         const iconType = defineIconType(arg.event)
@@ -82,8 +55,9 @@ export default {
         node.prepend(iconType)
         node.appendChild(editIcon)
       },
-      drop(arg) {
-        console.log('event dropped', arg)
+      eventReceive(arg) {
+        if (arg.event.extendedProps.days) arg.revert()
+        emit('menus:add', arg.event)
       },
       weekends: true,
       selectable: true,
