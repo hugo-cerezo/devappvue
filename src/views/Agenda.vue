@@ -14,7 +14,8 @@ const type = ref('')
 const selectedCalendarEvent = ref()
 const date = ref<DateClickArg>()
 
-const events = ref<CalendarEvent[]>(FAKE_EVENTS)
+// const events = ref<CalendarEvent[]>(FAKE_EVENTS)
+const events = ref<CalendarEvent[]>([])
 
 const handleCreate = (newDate: any) => {
   date.value = newDate
@@ -38,12 +39,15 @@ const insertMenu = (event: any) => {
   const formater = new dateFormater()
   const menu = event.extendedProps
   const api = apiService
+  const start: Date = event.start
 
-  menu.days.forEach((day: any) => {
+  menu.days.forEach((day: any, i: number) => {    
+    const date = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i)
+
     day.starter.forEach((starter: any) => {
       const data = {
         title: `${starter.name}`,
-        date: formater.getFormatedDate(event.start),
+        date: formater.getFormatedDate(date),
         fullDay: true,
         type: 0,
         color: 'red',
@@ -52,14 +56,15 @@ const insertMenu = (event: any) => {
           recipe: [],
         },
       }
-      // api.createEvent(data)
-      console.log(data);
+      // api.createEvent(data)      
+      // console.log(data.date);
+      
       events.value.push(data)
     })
     day.mainCourse.forEach((mainCourse: any) => {
       const data = {
         title: `${mainCourse.name}`,
-        date: formater.getFormatedDate(event.start),
+        date: formater.getFormatedDate(date),
         fullDay: true,
         type: 1,
         color: 'blue',
@@ -74,7 +79,7 @@ const insertMenu = (event: any) => {
     day.dessert.forEach((dessert: any) => {
       const data = {
         title: `${dessert.name}`,
-        date: formater.getFormatedDate(event.start),
+        date: formater.getFormatedDate(date),
         fullDay: true,
         type: 2,
         color: 'green',

@@ -530,6 +530,36 @@ const MENUS = [
           },
         ],
       },
+      {
+        starter: [{ id: '67c97bed0361520f65a31fae', name: 'Onion rings' }],
+        mainCourse: [
+          {
+            id: '67c97b5e0361520f65a31f92',
+            name: 'Pizza margherita',
+          },
+        ],
+        dessert: [
+          {
+            id: '67c97bc20361520f65a31fa1',
+            name: 'Vanilla ice cream',
+          },
+        ],
+      },
+      {
+        starter: [{ id: '67c97bed0361520f65a31fae', name: 'Onion rings' }],
+        mainCourse: [
+          {
+            id: '67c97b5e0361520f65a31f92',
+            name: 'Pizza margherita',
+          },
+        ],
+        dessert: [
+          {
+            id: '67c97bc20361520f65a31fa1',
+            name: 'Vanilla ice cream',
+          },
+        ],
+      },
     ],
   },
   {

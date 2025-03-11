@@ -56,8 +56,10 @@ export default {
         node.appendChild(editIcon)
       },
       eventReceive(arg) {
-        if (arg.event.extendedProps.days) arg.revert()
-        emit('menus:add', arg.event)
+        if (arg.event.extendedProps.days) {
+          arg.revert()
+          emit('menus:add', arg.event)
+        }
       },
       weekends: true,
       selectable: true,
