@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Agenda from '@/views/Agenda.vue'
-
+import MenusGestionView from '@/views/MenusGestionView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,11 +11,11 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
     },
-    // {
-    //   path: '/Menus',
-    //   name: 'Menus',
-    //   component: Menus,
-    // },
+    {
+      path: '/menusGestion',
+      name: 'menusGestion',
+      component: MenusGestionView,
+    },
     // {
     //   path: '/menuVueTelephonne',
     //   name: 'menuVueTelephonne',
