@@ -130,6 +130,7 @@ const insertMenu = (event: any) => {
         show = !show
         type = 'menu:description'
         selectedMenu = menu
+        modalWidth = 90
       }
     "
   />

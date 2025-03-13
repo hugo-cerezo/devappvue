@@ -5,6 +5,8 @@ const props = defineProps<{
   show: boolean
 }>()
 
+const show = ref(true)
+
 const currDay = (i: number) => {
   switch (i) {
     case 0:
@@ -23,8 +25,6 @@ const currDay = (i: number) => {
       return 'Dimanche'
   }
 }
-
-const show = ref(true)
 </script>
 <template>
   <div v-show="props.show">
