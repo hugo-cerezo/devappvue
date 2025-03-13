@@ -12,10 +12,6 @@ import bootstrap5Plugin from '@fullcalendar/bootstrap5'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-icons/font/bootstrap-icons.css' // needs additional webpack config!
 
-// import saladUrl from '@/assets/icons/salad.png'
-// import foodUrl from '@/assets/icons/food.png'
-// import desertUrl from '@/assets/icons/dessert.png'
-
 export default {
   components: {
     FullCalendar, // make the <FullCalendar> tag available

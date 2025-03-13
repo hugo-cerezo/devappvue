@@ -4,7 +4,6 @@ import Modal from '@/components/Modal.vue'
 import { ref } from 'vue'
 import type { DateClickArg } from '@fullcalendar/interaction/index.js'
 import Sidebar from '@/components/Sidebar.vue'
-import { FAKE_EVENTS } from '@/config/constant'
 import { dateFormater } from '@/helpers/dateFormater'
 import apiService from '@/services/apiService'
 import type { CalendarEvent } from '@/config/interfaces'
@@ -13,6 +12,8 @@ const show = ref(false)
 const type = ref('')
 const selectedCalendarEvent = ref()
 const date = ref<DateClickArg>()
+const selectedMenu = ref()
+const modalWidth = ref()
 
 // const events = ref<CalendarEvent[]>(FAKE_EVENTS)
 const events = ref<CalendarEvent[]>([])
@@ -21,6 +22,7 @@ const handleCreate = (newDate: any) => {
   date.value = newDate
   type.value = 'form:add'
   show.value = true
+  modalWidth.value = 75
 }
 
 const handleEdit = (data: any) => {
@@ -41,7 +43,7 @@ const insertMenu = (event: any) => {
   const api = apiService
   const start: Date = event.start
 
-  menu.days.forEach((day: any, i: number) => {    
+  menu.days.forEach((day: any, i: number) => {
     const date = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i)
 
     day.starter.forEach((starter: any) => {
@@ -56,9 +58,9 @@ const insertMenu = (event: any) => {
           recipe: [],
         },
       }
-      // api.createEvent(data)      
+      // api.createEvent(data)
       // console.log(data.date);
-      
+
       events.value.push(data)
     })
     day.mainCourse.forEach((mainCourse: any) => {
@@ -100,8 +102,14 @@ const insertMenu = (event: any) => {
     :show="show"
     :type="type"
     :event="selectedCalendarEvent"
+    :menu="selectedMenu"
+    :width="modalWidth"
     @modal:show="((show = false), (type = ''))"
-    @form:add="(values: any) => (events.push({ ...values, date: date?.dateStr }), (show = false))"
+    @form:add="
+      (values: any) => (
+        events.push({ ...values, date: date?.dateStr }), (show = false), (modalWidth = 75)
+      )
+    "
     @form:edit="
       (values: any) => {
         selectedCalendarEvent.event.setProp('title', values.title)
@@ -116,7 +124,16 @@ const insertMenu = (event: any) => {
     "
     @form:remove="(selectedCalendarEvent.event.remove(), (show = false))"
   />
-  <Sidebar />
+  <Sidebar
+    @menu:selected="
+      (menu) => {
+        show = !show
+        type = 'menu:description'
+        selectedMenu = menu
+      }
+    "
+  />
+
   <Calendar
     :events="events"
     @modal:create="(newDate) => handleCreate(newDate)"

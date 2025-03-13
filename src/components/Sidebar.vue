@@ -479,7 +479,6 @@ const FAKE_MENUS = [
     start: '2025-03-06',
   },
 ]
-
 const MENUS = [
   {
     id: '67c97bed0361520f65a31abc',
@@ -585,12 +584,12 @@ const MENUS = [
   },
 ]
 const menus = ref(MENUS)
-
 onMounted(() => {
   menus.value?.forEach((event, i) => {
     let el = document.getElementById(event.id.toString())
     new Draggable(el as HTMLElement, {
       eventData: menus.value[i],
+      // itemSelector: '.item',
     })
   })
 })
@@ -601,7 +600,7 @@ onMounted(() => {
       <p>Menus</p>
       <div class="wrapper">
         <div v-for="menu in menus" class="p-1 text-center">
-          <div :id="menu.id.toString()" class="item rounded">
+          <div :id="menu.id.toString()" class="item rounded" @click="$emit('menu:selected', menu)">
             {{ menu.name }}
           </div>
         </div>
@@ -616,7 +615,7 @@ onMounted(() => {
   text-overflow: ellipsis;
   color: white;
   background-color: blue;
-  /* cursor: pointer; */
+  cursor: pointer;
 }
 
 .wrapper {
