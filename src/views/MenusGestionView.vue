@@ -5,20 +5,24 @@
                 <p class="sidebarheader">Plats</p>
 
                 <div class="checkbox-container">
-                    <input type="checkbox" id="entree" @change="filtermealsselector('entre')" />
+                    <input type="checkbox" id="entree" @change="filterMealsSelector('entre')" />
                     <label for="entree">Entrée</label>
 
-                    <input type="checkbox" id="plat" @change="filtermealsselector('plat')" />
+                    <input type="checkbox" id="plat" @change="filterMealsSelector('plat')" />
                     <label for="plat">Plat</label>
 
-                    <input type="checkbox" id="dessert" @change="filtermealsselector('dessert')" />
+                    <input type="checkbox" id="dessert" @change="filterMealsSelector('dessert')" />
                     <label for="dessert">Dessert</label>
+                    <div>
+                        <input @change="filertMealSelectorByName($event)" type="text" placeholder="Search..." />
+                    </div>
                 </div>
+
                 <!-- systeme de tri des plats -->
                 <ul v-if="MealstoDisplay.length > 0" class="mealcontainer">
                     <VueDraggableNext v-model="MealstoDisplay" :group="{ name: 'meals', pull: 'clone', put: false }"
                         @end="onMealsListChange">
-                        <li v-for="meal in MealstoDisplay" :key="meal.id" class="mealchoice">
+                        <li v-for="meal in MealstoDisplay" :key="meal.id" class="drag-el">
                             <p>{{ meal.name }}</p>
                         </li>
                     </VueDraggableNext>
@@ -49,6 +53,8 @@
                                 <template v-for="meal in weekdays.lundi" :key="meal.id">
                                     <div :class="['drag-el', getMealClass(meal.type.name), sortMealsByType('lundi')]">
                                         {{ meal.name }}
+                                        <button class="delete-button"
+                                            @click="deleteMealFromDay('lundi', meal.id)">✖</button>
                                     </div>
                                 </template>
                             </VueDraggableNext>
@@ -59,6 +65,8 @@
                                 <template v-for="meal in weekdays.mardi" :key="meal.id">
                                     <div :class="['drag-el', getMealClass(meal.type.name), sortMealsByType('mardi')]">
                                         {{ meal.name }}
+                                        <button class="delete-button"
+                                            @click="deleteMealFromDay('mardi', meal.id)">✖</button>
                                     </div>
                                 </template>
                             </VueDraggableNext>
@@ -70,6 +78,8 @@
                                     <div
                                         :class="['drag-el', getMealClass(meal.type.name), sortMealsByType('mercredi')]">
                                         {{ meal.name }}
+                                        <button class="delete-button"
+                                            @click="deleteMealFromDay('mercredi', meal.id)">✖</button>
                                     </div>
                                 </template>
                             </VueDraggableNext>
@@ -80,6 +90,8 @@
                                 <template v-for="meal in weekdays.jeudi" :key="meal.id">
                                     <div :class="['drag-el', getMealClass(meal.type.name), sortMealsByType('jeudi')]">
                                         {{ meal.name }}
+                                        <button class="delete-button"
+                                            @click="deleteMealFromDay('jeudi', meal.id)">✖</button>
                                     </div>
                                 </template>
                             </VueDraggableNext>
@@ -91,6 +103,8 @@
                                     <div
                                         :class="['drag-el', getMealClass(meal.type.name), sortMealsByType('vendredi')]">
                                         {{ meal.name }}
+                                        <button class="delete-button"
+                                            @click="deleteMealFromDay('vendredi', meal.id)">✖</button>
                                     </div>
                                 </template>
                             </VueDraggableNext>
@@ -101,6 +115,8 @@
                                 <template v-for="meal in weekdays.samedi" :key="meal.id">
                                     <div :class="['drag-el', getMealClass(meal.type.name), sortMealsByType('samedi')]">
                                         {{ meal.name }}
+                                        <button class="delete-button"
+                                            @click="deleteMealFromDay('samedi', meal.id)">✖</button>
                                     </div>
                                 </template>
                             </VueDraggableNext>
@@ -112,6 +128,8 @@
                                     <div
                                         :class="['drag-el', getMealClass(meal.type.name), sortMealsByType('dimanche')]">
                                         {{ meal.name }}
+                                        <button class="delete-button"
+                                            @click="deleteMealFromDay('dimanche', meal.id)">✖</button>
                                     </div>
                                 </template>
                             </VueDraggableNext>
@@ -160,7 +178,7 @@ const weekdays = ref<Record<string, MealsDataToDisplay[]>>({
 })
 
 
-const filtermealsselector = (mealType: string) => {
+const filterMealsSelector = (mealType: string) => {
     const index = selectedMealTypes.value.indexOf(mealType)
     if (index > -1) {
         selectedMealTypes.value.splice(index, 1)
@@ -175,8 +193,21 @@ const filtermealsselector = (mealType: string) => {
     }
 }
 
+const filertMealSelectorByName = (event: Event) => {
+    const search = (event.target as HTMLInputElement).value
+    if (search === '') {
+        MealstoDisplay.value = MealsList.value
+    } else {
+        MealstoDisplay.value = MealsList.value.filter(meal => meal.name.toLowerCase().includes(search.toLowerCase()))
+    }
+}
+
 const onMealsListChange = (event: any) => {
     console.log('MealsList changed:', event)
+}
+
+const deleteMealFromDay = (day: string, mealId: string) => {
+    weekdays.value[day] = weekdays.value[day].filter(meal => meal.id !== mealId)
 }
 
 const daychange = (day: string) => {
@@ -239,7 +270,9 @@ const saveData = () => {
     }
     console.log(menuDate.value)
     console.log('Menu:', menu)
-    // reset datas ? 
+    apiService.createMenus(menu)
+    // reset datas ?
+    // return date to parents ? 
 }
 
 onMounted(async () => {
@@ -262,6 +295,20 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.delete-button {
+    background: none;
+    border: none;
+    color: red;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: color 0.3s;
+}
+
+.delete-button:hover {
+    color: darkred;
+}
+
 .checkbox-container {
     display: flex;
     flex-direction: column;
@@ -297,18 +344,15 @@ onMounted(async () => {
     background-color: #f8f9fa;
 }
 
-.mealchoice {
-    margin: 5px;
-    border: 2px solid #ddd;
-    border-radius: 5px;
-    font-size: smaller;
-    text-align: center;
-}
-
 .mealcontainer {
     margin-top: 1vh;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .container {
@@ -320,23 +364,32 @@ onMounted(async () => {
 
 
 .drag-el {
-    margin: 2px;
+    margin: 5px;
+    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: smaller;
     text-align: center;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.drag-el:hover {
+    background-color: #f8f9fa;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .meal-entree {
-    background-color: red;
+    background-color: #ffcccc;
 }
 
 .meal-plat {
-    background-color: green;
+    background-color: #ccffcc;
 }
 
 .meal-dessert {
-    background-color: blue;
+    background-color: #ccccff;
 }
 
 .container {

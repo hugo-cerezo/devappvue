@@ -1,7 +1,30 @@
 import type { Meals } from '@/config/interfaces'
 import type { Products } from '@/config/interfaces'
+// import { create } from 'domain'
+import type { Menu } from '@/config/interfaces'
 
 export default {
+  async createMenus(Menu: Menu) {
+    console.log(Menu)
+    try {
+      const response = await fetch('https://localhost:7286/api/Menus', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(Menu),
+      })
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP ${response.status}`)
+      }
+      const data = await response.json()
+      console.log('POST createPlat:', data)
+      return data
+    } catch (error) {
+      console.error('POST createPlat error:', error)
+      throw error
+    }
+  },
   // POST: Create a new meal
   async createMeals(Meals: Meals) {
     try {
