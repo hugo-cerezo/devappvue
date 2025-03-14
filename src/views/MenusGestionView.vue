@@ -149,12 +149,6 @@ const ProductsList = ref<Products[]>([])
 const EventsList = ref<CalendarEvent[]>([])
 const MenuSelected = ref<Menu[]>([])
 const selectedMealTypes = ref<string[]>([])
-// const selectedDay = ref('')
-// const formData = ref({
-//     meal: '',
-//     product: ''
-// })
-const type = ref('')
 const weekdays = ref<Record<string, MealsDataToDisplay[]>>({
     lundi: [],
     mardi: [],
@@ -202,23 +196,6 @@ const closeModal = () => {
     isModalOpen.value = false
 }
 
-const saveData = () => {
-    closeModal()
-    let menu: Menu = {
-        name: menuName.value,
-        days: [
-            weekdays.value.lundi.map(meal => meal.id),
-            weekdays.value.mardi.map(meal => meal.id),
-            weekdays.value.mercredi.map(meal => meal.id),
-            weekdays.value.jeudi.map(meal => meal.id),
-            weekdays.value.vendredi.map(meal => meal.id),
-            weekdays.value.samedi.map(meal => meal.id),
-            weekdays.value.dimanche.map(meal => meal.id)
-        ]
-    }
-    console.log(menuDate.value)
-    console.log('Menu:', menu)
-}
 
 const getMealClass = (mealType: string) => {
     switch (mealType) {
@@ -244,6 +221,25 @@ const sortMealsByType = (day: string) => {
         }
         return 0
     })
+}
+
+const saveData = () => {
+    closeModal()
+    let menu: Menu = {
+        name: menuName.value,
+        days: [
+            weekdays.value.lundi.map(meal => meal.id),
+            weekdays.value.mardi.map(meal => meal.id),
+            weekdays.value.mercredi.map(meal => meal.id),
+            weekdays.value.jeudi.map(meal => meal.id),
+            weekdays.value.vendredi.map(meal => meal.id),
+            weekdays.value.samedi.map(meal => meal.id),
+            weekdays.value.dimanche.map(meal => meal.id)
+        ]
+    }
+    console.log(menuDate.value)
+    console.log('Menu:', menu)
+    // reset datas ? 
 }
 
 onMounted(async () => {
