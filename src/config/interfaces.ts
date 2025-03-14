@@ -66,3 +66,16 @@ export interface Products {
   type: ProductsType
   season: number
 }
+
+export interface Menu {
+  id?: string
+  name: string
+  days: string[][]
+}
+
+export interface MealsDataToDisplay {
+  id: string
+  name: string
+  type: MealsType
+  customerSuccess: number
+}

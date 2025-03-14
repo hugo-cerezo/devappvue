@@ -13,6 +13,8 @@ const emit = defineEmits(['modal:show', 'form:add', 'form:edit', 'form:remove'])
 
 const hideModal = (event: MouseEvent) => {
   const target = (event.target as HTMLElement).className
+  console.log(props)
+
   if (target === 'modal') emit('modal:show', !props.show)
 }
 </script>
@@ -27,7 +29,8 @@ const hideModal = (event: MouseEvent) => {
           @cancel="() => emit('modal:show', false)" @confirm="(values: any) => emit('form:edit', values)"
           @remove="emit('form:remove')" />
 
-        <Description v-if="props.type == 'show:description'" :events="props.event" />
+        <Description @cancel="emit('modal:show', false)" v-if="props.type == 'show:description'"
+          :events="props.event" />
       </slot>
     </div>
   </div>

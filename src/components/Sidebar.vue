@@ -579,6 +579,7 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
 <style lang="css" scoped>
 .item {
   white-space: nowrap;
