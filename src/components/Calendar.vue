@@ -34,10 +34,11 @@ export default {
     const calendarOptions: CalendarOptions = {
       plugins: [dayGridPlugin, interactionPlugin, bootstrap5Plugin],
       droppable: true,
-      initialView: 'dayGridWeek',
+      initialView: 'dayGridMonth',
       eventOrder: 'type',
       events: props.events,
       eventDurationEditable: false,
+      firstDay: 1,
       eventDidMount: (arg) => {
         const node = arg.el.childNodes[0].childNodes[0] as HTMLElement
         const iconType = defineIconType(arg.event)

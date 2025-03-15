@@ -21,7 +21,7 @@ const clear = () => {
   name.value = ''
 }
 const confirm = () => {
-  console.log(name, type, products)
+  console.log(name.value, type.value, products.value)
   return
   emit('confirm', { title: name.value, fullDay: true })
   clear()

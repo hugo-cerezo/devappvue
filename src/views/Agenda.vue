@@ -6,8 +6,9 @@ import type { DateClickArg } from '@fullcalendar/interaction/index.js'
 import Sidebar from '@/components/Sidebar.vue'
 import { dateFormater } from '@/helpers/dateFormater'
 import apiService from '@/services/apiService'
-import type { CalendarEvent } from '@/config/interfaces'
+import type { FullCalendarEvent } from '@/config/interfaces'
 
+const generateUniqueId = () => '_' + Math.random().toString(36).substr(2, 9)
 const show = ref(false)
 const type = ref('')
 const selectedCalendarEvent = ref()
@@ -16,7 +17,7 @@ const selectedMenu = ref()
 const modalWidth = ref()
 
 // const events = ref<CalendarEvent[]>(FAKE_EVENTS)
-const events = ref<CalendarEvent[]>([])
+const events = ref<FullCalendarEvent[]>([])
 
 const handleCreate = (newDate: any) => {
   date.value = newDate
@@ -48,6 +49,7 @@ const insertMenu = (event: any) => {
 
     day.starter.forEach((starter: any) => {
       const data = {
+        id: generateUniqueId(), // Add unique ID
         title: `${starter.name}`,
         date: formater.getFormatedDate(date),
         fullDay: true,
@@ -59,12 +61,11 @@ const insertMenu = (event: any) => {
         },
       }
       // api.createEvent(data)
-      // console.log(data.date);
-
       events.value.push(data)
     })
     day.mainCourse.forEach((mainCourse: any) => {
       const data = {
+        id: generateUniqueId(), // Add unique ID
         title: `${mainCourse.name}`,
         date: formater.getFormatedDate(date),
         fullDay: true,
@@ -80,6 +81,7 @@ const insertMenu = (event: any) => {
     })
     day.dessert.forEach((dessert: any) => {
       const data = {
+        id: generateUniqueId(), // Add unique ID
         title: `${dessert.name}`,
         date: formater.getFormatedDate(date),
         fullDay: true,
@@ -94,6 +96,20 @@ const insertMenu = (event: any) => {
       events.value.push(data)
     })
   })
+
+  // refetch the events
+  console.log(events.value)
+}
+
+const formRemove = () => {
+  // Edit the event in the database instead of removing it then refetch the events
+  const event = selectedCalendarEvent.value.event
+  const id = event.id
+  const index = events.value.findIndex((event) => event.id === id)
+  events.value.splice(index, 1) 
+  event.remove()
+  show.value = false
+  
 }
 </script>
 
@@ -122,7 +138,7 @@ const insertMenu = (event: any) => {
         selectedCalendarEvent = null
       }
     "
-    @form:remove="(selectedCalendarEvent.event.remove(), (show = false))"
+    @form:remove="formRemove"
   />
   <Sidebar
     @menu:selected="

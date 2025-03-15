@@ -1,5 +1,5 @@
 import { dateFormater } from '@/helpers/dateFormater'
-import type { CalendarEvent } from './interfaces'
+import type { FullCalendarEvent } from './interfaces'
 
 // Replace with your own client ID (this is a test client ID from Enzo's account)
 export const GOOGLE_CLIENT_ID =
@@ -118,7 +118,7 @@ export const FAKE_RECIPE = [
 
 let date = new dateFormater()
 
-export const FAKE_EVENTS: CalendarEvent[] = [
+export const FAKE_EVENTS: FullCalendarEvent[] = [
   {
     id: 0,
     title: 'Croissant',
