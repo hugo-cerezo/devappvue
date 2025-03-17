@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { PRODUCTS_TYPES } from '@/config/constant'
 import { onMounted, ref, watch } from 'vue'
-import apiService from '@/services/apiService'
 import type { Products } from '@/config/interfaces'
+import { ProductsService } from '@/services/ProductsServices'
 
 const props = defineProps(['values'])
 const emit = defineEmits(['update'])
 const checked = ref(props.values)
 const products = ref<Products[]>()
+const productsService = new ProductsService()
 
 onMounted(async () => {
-  products.value = await apiService.getProducts()
+  products.value = await productsService.getProducts()
 })
 
 watch(checked, (values: any[]) => {
