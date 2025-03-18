@@ -121,6 +121,7 @@ onMounted(() => {
   <div class="col-2 me-1">
     <div class="border h-100">
       <p>Menus</p>
+      <!-- <div class="item rounded" @click="$emit('menu:add')">new menu</div> -->
       <div class="wrapper">
         <div v-for="menu in menus" class="p-1 text-center">
           <div :id="menu.id.toString()" class="item rounded" @click="$emit('menu:selected', menu)">

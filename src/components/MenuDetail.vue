@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+
 const props = defineProps<{
   menu: any
   show: boolean
@@ -25,6 +26,7 @@ const currDay = (i: number) => {
       return 'Dimanche'
   }
 }
+console.log(props.menu)
 </script>
 <template>
   <div v-show="props.show">

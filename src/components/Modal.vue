@@ -3,6 +3,7 @@ import AddEvent from './forms/AddEvent.vue'
 import EditEvent from './forms/EditEvent.vue'
 import Description from '@/views/Description.vue'
 import MenuDetail from './MenuDetail.vue'
+import MenusGestionView from '@/views/MenusGestionView.vue';
 
 const props = defineProps<{
   show: boolean
@@ -34,7 +35,9 @@ const hideModal = (event: MouseEvent) => {
           @cancel="() => emit('modal:show', false)" @confirm="(values: any) => emit('form:edit', values)"
           @remove="emit('form:remove')" />
         <Description v-if="props.type == 'show:description'" :events="props.event" />
-        <MenuDetail v-if="props.type == 'menu:description'" :menu="props.menu" :show="props.show" />
+        <!-- <MenuDetail v-if="props.type == 'menu:description'" :menu="props.menu" :show="props.show" /> -->
+        <MenusGestionView v-if="props.type == 'menu:description'" :menu="props.menu" :show="props.show" />
+        <MenusGestionView v-if="props.type == 'menu:add'" :menu="props.menu" :show="props.show" />
       </slot>
     </div>
   </div>

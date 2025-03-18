@@ -28,4 +28,4 @@ export class EventsService extends ApiService {
     })
   }
 }
-export default new EventsService()
+// export default new EventsService()

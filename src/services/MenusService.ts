@@ -13,5 +13,9 @@ export class MenusService extends ApiService {
   getMenus() {
     return this.request('Menus')
   }
+
+  getMenuById(id: Menu['id']) {
+    return this.request(`Menus/${id}`)
+  }
 }
 export default new MenusService()

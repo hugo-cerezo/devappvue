@@ -155,7 +155,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import type { Products, Meals, FullCalendarEvent, Menu, MealsDataToDisplay } from '@/config/interfaces'
-import EventsService from '@/services/EventsService'
+// import EventsService from '@/services/EventsService'
 import MealsService from '@/services/MealsService'
 import ProductsService from '@/services/ProductsServices'
 import MenuService from '@/services/MenusService'
@@ -177,7 +177,10 @@ const weekdays = ref<Record<string, MealsDataToDisplay[]>>({
     samedi: [],
     dimanche: []
 })
-
+const props = defineProps<{
+    menu: any
+    show: boolean
+}>()
 
 const filterMealsSelector = (mealType: string) => {
     const index = selectedMealTypes.value.indexOf(mealType)
@@ -270,26 +273,39 @@ const saveData = () => {
         }
     }
     MenuService.createMenus(menu)
+    props.menu.show = false
     // reset datas ?
     // return date to parents ? 
 }
 
 onMounted(async () => {
-    // menuselected.value = get props from parent
-    if (MenuSelected.value.length > 0) {
-        MenuSelected.value.forEach(menu => {
-            weekdays.value.lundi = menu.days[0].map((mealId: string) => MealsList.value.find(meal => meal.id === mealId) as MealsDataToDisplay)
-            weekdays.value.mardi = menu.days[1].map((mealId: string) => MealsList.value.find(meal => meal.id === mealId) as MealsDataToDisplay)
-            weekdays.value.mercredi = menu.days[2].map((mealId: string) => MealsList.value.find(meal => meal.id === mealId) as MealsDataToDisplay)
-            weekdays.value.jeudi = menu.days[3].map((mealId: string) => MealsList.value.find(meal => meal.id === mealId) as MealsDataToDisplay)
-            weekdays.value.vendredi = menu.days[4].map((mealId: string) => MealsList.value.find(meal => meal.id === mealId) as MealsDataToDisplay)
-            weekdays.value.samedi = menu.days[5].map((mealId: string) => MealsList.value.find(meal => meal.id === mealId) as MealsDataToDisplay)
-            weekdays.value.dimanche = menu.days[6].map((mealId: string) => MealsList.value.find(meal => meal.id === mealId) as MealsDataToDisplay)
-        })
-    }
     MealsList.value = await MealsService.getMealsDataToDisplay()
     MealstoDisplay.value = MealsList.value
     ProductsList.value = await ProductsService.getProducts()
+    if (props.menu.id.length > 0) {
+        MenuSelected.value = await MenuService.getMenuById('67d96d28210cadc7612e9235')
+        MenuSelected.value.days.lundi.forEach(element => {
+            weekdays.value.lundi.push(MealsList.value.find(meal => meal.id === element))
+        });
+        MenuSelected.value.days.mardi.forEach(element => {
+            weekdays.value.mardi.push(MealsList.value.find(meal => meal.id === element))
+        });
+        MenuSelected.value.days.mercredi.forEach(element => {
+            weekdays.value.mercredi.push(MealsList.value.find(meal => meal.id === element))
+        });
+        MenuSelected.value.days.jeudi.forEach(element => {
+            weekdays.value.jeudi.push(MealsList.value.find(meal => meal.id === element))
+        });
+        MenuSelected.value.days.vendredi.forEach(element => {
+            weekdays.value.vendredi.push(MealsList.value.find(meal => meal.id === element))
+        });
+        MenuSelected.value.days.samedi.forEach(element => {
+            weekdays.value.samedi.push(MealsList.value.find(meal => meal.id === element))
+        });
+        MenuSelected.value.days.dimanche.forEach(element => {
+            weekdays.value.dimanche.push(MealsList.value.find(meal => meal.id === element))
+        });
+    }
 })
 </script>
 
