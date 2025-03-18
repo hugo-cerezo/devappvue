@@ -15,6 +15,8 @@
 //   }
 // }
 
+import type { Dictionary } from '@fullcalendar/core/internal'
+
 export interface FullCalendarEvent {
   id?: string
   groupId?: string
@@ -70,7 +72,7 @@ export interface Products {
 export interface Menu {
   id?: string
   name: string
-  days: string[][]
+  days: { [key: string]: string[] }
 }
 
 export interface MealsDataToDisplay {

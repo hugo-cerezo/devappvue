@@ -28,3 +28,4 @@ export class ProductsService extends ApiService {
     })
   }
 }
+export default new ProductsService()

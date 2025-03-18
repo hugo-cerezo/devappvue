@@ -18,6 +18,10 @@ export class MealsService extends ApiService {
     return this.request(`Meals/getmealsbyname?name=${name}`)
   }
 
+  getMealsDataToDisplay() {
+    return this.request('Meals/mealsdatatodisplay')
+  }
+
   updateMeals(id: Meals['id'], Meals: Meals) {
     return this.request(`Meals/${id}`, {
       method: 'PUT',
@@ -32,3 +36,5 @@ export class MealsService extends ApiService {
     })
   }
 }
+
+export default new MealsService()
