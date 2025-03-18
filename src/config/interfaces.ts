@@ -15,7 +15,7 @@
 //   }
 // }
 
-export interface CalendarEvent {
+export interface FullCalendarEvent {
   id?: string
   groupId?: string
   allDay?: boolean

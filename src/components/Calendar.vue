@@ -12,10 +12,6 @@ import bootstrap5Plugin from '@fullcalendar/bootstrap5'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-icons/font/bootstrap-icons.css' // needs additional webpack config!
 
-// import saladUrl from '@/assets/icons/salad.png'
-// import foodUrl from '@/assets/icons/food.png'
-// import desertUrl from '@/assets/icons/dessert.png'
-
 export default {
   components: {
     FullCalendar, // make the <FullCalendar> tag available
@@ -38,10 +34,11 @@ export default {
     const calendarOptions: CalendarOptions = {
       plugins: [dayGridPlugin, interactionPlugin, bootstrap5Plugin],
       droppable: true,
-      initialView: 'dayGridWeek',
+      initialView: 'dayGridMonth',
       eventOrder: 'type',
       events: props.events,
       eventDurationEditable: false,
+      firstDay: 1,
       eventDidMount: (arg) => {
         const node = arg.el.childNodes[0].childNodes[0] as HTMLElement
         const iconType = defineIconType(arg.event)
@@ -56,8 +53,10 @@ export default {
         node.appendChild(editIcon)
       },
       eventReceive(arg) {
-        if (arg.event.extendedProps.days) arg.revert()
-        emit('menus:add', arg.event)
+        if (arg.event.extendedProps.days) {
+          arg.revert()
+          emit('menus:add', arg.event)
+        }
       },
       weekends: true,
       selectable: true,

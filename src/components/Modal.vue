@@ -2,11 +2,14 @@
 import AddEvent from './forms/AddEvent.vue'
 import EditEvent from './forms/EditEvent.vue'
 import Description from '@/views/Description.vue'
+import MenuDetail from './MenuDetail.vue'
 
 const props = defineProps<{
   show: boolean
   type: string
   event?: any
+  menu?: any
+  width?: number
 }>()
 
 const emit = defineEmits(['modal:show', 'form:add', 'form:edit', 'form:remove'])
@@ -19,7 +22,10 @@ const hideModal = (event: MouseEvent) => {
 }
 </script>
 <template>
-  <div class="modal" v-show="props.show" @click="(event: MouseEvent) => hideModal(event)">
+  <div class="modal" v-show="props.show" @click="(event: MouseEvent) => hideModal(event)" :style="{
+    paddingLeft: `${100 - (props.width ?? 75)}%`,
+    paddingRight: `${100 - (props.width ?? 75)}%`,
+  }">
     <div class="modal-content">
       <slot name="modal-slot-content">
         <AddEvent v-if="props.type == 'form:add'" @cancel="emit('modal:show', false)"
@@ -29,8 +35,8 @@ const hideModal = (event: MouseEvent) => {
           @cancel="() => emit('modal:show', false)" @confirm="(values: any) => emit('form:edit', values)"
           @remove="emit('form:remove')" />
 
-        <Description @cancel="emit('modal:show', false)" v-if="props.type == 'show:description'"
-          :events="props.event" />
+        <Description v-if="props.type == 'show:description'" :events="props.event" />
+        <MenuDetail v-if="props.type == 'menu:description'" :menu="props.menu" :show="props.show" />
       </slot>
     </div>
   </div>
@@ -47,8 +53,6 @@ const hideModal = (event: MouseEvent) => {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  padding-left: 25%;
-  padding-right: 25%;
 }
 
 .modal-content {
