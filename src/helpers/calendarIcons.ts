@@ -4,7 +4,8 @@ import desertUrl from '@/assets/icons/dessert.png'
 
 export const defineIconType = (event: any) => {
   let url = ''
-  switch (event.extendedProps.type) {
+  const type = event.extendedProps.meal?.type.id
+  switch (type) {
     case 0:
       url = saladUrl
       break
@@ -12,11 +13,11 @@ export const defineIconType = (event: any) => {
       url = foodUrl
       break
     case 2:
-      url = desertUrl
+      url = desertUrl 
       break
   }
 
-  switch (event.extendedProps.type) {
+  switch (type) {
     case 0:
       let saladIcon = document.createElement('img')
       saladIcon.src = url

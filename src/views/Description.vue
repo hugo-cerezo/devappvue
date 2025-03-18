@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import type { Meals } from '@/config/interfaces';
-import apiService from '@/services/apiService';
-import { ref, onMounted } from 'vue';
+import type { Meals } from '@/config/interfaces'
+import { MealsService } from '@/services/MealsService'
+import { ref, onMounted } from 'vue'
 
 const props = defineProps<{ events: any }>()
 const name = props.events.event._def.title
 const datas = ref<Meals[]>([])
-console.log(props.events)
+const mealsService = new MealsService()
+
 onMounted(async () => {
-  datas.value = await apiService.getMealByName(name)
+  datas.value = await mealsService.getMealByName(name)
 })
 </script>
 

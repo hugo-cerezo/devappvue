@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
-import { ref } from 'vue'
-import { FAKE_RECIPE } from '@/config/constant'
+import { onMounted, ref } from 'vue'
 import MealType from './fragments/MealType.vue'
 import ProductList from './fragments/ProductList.vue'
 import AddProduct from './fragments/AddProduct.vue'
 import ExistingProducts from './fragments/ExistingProducts.vue'
-import type { Products } from '@/config/interfaces'
+import type { Meals, Products } from '@/config/interfaces'
+import { MealsService } from '@/services/MealsService'
 
 const emit = defineEmits(['cancel', 'confirm'])
 const selectedAction = ref('existing')
 const selectedExistingEntry = ref(null)
+const meals = ref<Meals[]>([])
+const api = new MealsService()
 
 const name = ref('')
 const type = ref([])
@@ -21,9 +23,16 @@ const clear = () => {
   name.value = ''
 }
 const confirm = () => {
-  console.log(name.value, type.value, products.value)
-  return
-  emit('confirm', { title: name.value, fullDay: true })
+  switch (selectedAction.value) {
+    case 'existing':
+      if (selectedExistingEntry.value) {
+        emit('confirm', selectedExistingEntry.value)
+      }
+      break
+    case 'new':
+      emit('confirm', { name: name.value, type: type.value, products: products.value })
+      break
+  }
   clear()
 }
 const cancel = () => {
@@ -37,24 +46,27 @@ const removeProduct = (product: Products) => {
     1,
   )
 }
+
+onMounted(async () => {
+  meals.value = await api.getMeals()
+})
 </script>
 
 <template>
   <section v-if="selectedAction === 'existing'">
     <div class="form-group mb-2">
-      <select name="existing-entry" class="form-select">
+      <select name="existing-entry" class="form-select" v-model="selectedExistingEntry">
         <option selected :value="null">Plat existant</option>
-        <option v-for="recipe in FAKE_RECIPE" :value="recipe" :v-model="selectedExistingEntry">
-          {{ recipe.title }}
-        </option>
+        <option v-for="meal in meals" :key="meal.id" :value="meal">{{ meal.name }}</option>
       </select>
     </div>
-    <input
-      type="button"
-      value="Créer un nouveau plat"
-      class="btn btn-primary w-100"
-      @click="selectedAction = 'new'"
-    />
+    <div class="d-flex justify-content-end mt-2">
+      <button class="btn btn-primary me-1" @click="confirm">Confirm</button>
+      <button class="btn btn-danger me-1" @click="cancel">Cancel</button>
+      <button class="btn btn-secondary" @click="selectedAction = 'new'">
+        Créer un nouveau plat
+      </button>
+    </div>
   </section>
 
   <section v-if="selectedAction === 'new'">
@@ -73,10 +85,13 @@ const removeProduct = (product: Products) => {
         <AddProduct />
       </div>
     </div>
-  </section>
 
-  <div class="d-flex justify-content-end mt-2">
-    <button class="btn btn-primary me-1" @click="confirm">Confirm</button>
-    <button class="btn btn-danger" @click="cancel">Cancel</button>
-  </div>
+    <div class="d-flex justify-content-end mt-2">
+      <button class="btn btn-primary me-1" @click="confirm">Confirm</button>
+      <button class="btn btn-danger me-1" @click="cancel">Cancel</button>
+      <button class="btn btn-secondary" @click="selectedAction = 'existing'">
+        Plats existants
+      </button>
+    </div>
+  </section>
 </template>
