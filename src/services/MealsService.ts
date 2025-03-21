@@ -3,7 +3,7 @@ import type { Meals } from '@/config/interfaces'
 
 export class MealsService extends ApiService {
   createMeals(Meals: Meals) {
-    return this.request('Meals', {
+    return this.request('Meals/createmeals', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(Meals),

@@ -44,28 +44,20 @@ export interface FullCalendarEvent {
   source?: string
 }
 
-export interface MealsType {
-  id: number
-  name: string
-}
 export interface Meals {
   id: string
   name: string
-  products: Products[]
+  products: string[]
   recipe: string[]
-  type: MealsType
+  mealType: number
   customerSuccess: number
 }
 
-export interface ProductsType {
-  id: number
-  name: string
-}
 export interface Products {
   id: string
   name: string
   orderDelay: number
-  type: ProductsType
+  type: number
   season: number
 }
 
@@ -73,11 +65,4 @@ export interface Menu {
   id?: string
   name: string
   days: { [key: string]: string[] }
-}
-
-export interface MealsDataToDisplay {
-  id: string
-  name: string
-  type: MealsType
-  customerSuccess: number
 }

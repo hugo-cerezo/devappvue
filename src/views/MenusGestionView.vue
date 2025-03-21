@@ -47,11 +47,11 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>
+                        <td class="col-2">
                             <VueDraggableNext v-model="weekdays.lundi" :group="{ name: 'meals' }"
                                 @end="daychange('lundi')">
                                 <template v-for="meal in weekdays.lundi" :key="meal.id">
-                                    <div :class="['drag-el', getMealClass(meal.type.id), sortMealsByType('lundi')]">
+                                    <div :class="['drag-el', getMealClass(meal.mealType), sortMealsByType('lundi')]">
                                         {{ meal.name }}
                                         <button class="delete-button"
                                             @click="deleteMealFromDay('lundi', meal.id)">✖</button>
@@ -59,11 +59,12 @@
                                 </template>
                             </VueDraggableNext>
                         </td>
-                        <td>
+
+                        <td class="col-2">
                             <VueDraggableNext v-model="weekdays.mardi" :group="{ name: 'meals' }" class=""
                                 @end="daychange('mardi')">
                                 <template v-for="meal in weekdays.mardi" :key="meal.id">
-                                    <div :class="['drag-el', getMealClass(meal.type.id), sortMealsByType('mardi')]">
+                                    <div :class="['drag-el', getMealClass(meal.mealType), sortMealsByType('mardi')]">
                                         {{ meal.name }}
                                         <button class="delete-button"
                                             @click="deleteMealFromDay('mardi', meal.id)">✖</button>
@@ -71,11 +72,11 @@
                                 </template>
                             </VueDraggableNext>
                         </td>
-                        <td>
+                        <td class="col-2">
                             <VueDraggableNext v-model="weekdays.mercredi" :group="{ name: 'meals' }" class=""
                                 @end="daychange('mercredi')">
                                 <template v-for="meal in weekdays.mercredi" :key="meal.id">
-                                    <div :class="['drag-el', getMealClass(meal.type.id), sortMealsByType('mercredi')]">
+                                    <div :class="['drag-el', getMealClass(meal.mealType), sortMealsByType('mercredi')]">
                                         {{ meal.name }}
                                         <button class="delete-button"
                                             @click="deleteMealFromDay('mercredi', meal.id)">✖</button>
@@ -83,11 +84,11 @@
                                 </template>
                             </VueDraggableNext>
                         </td>
-                        <td>
+                        <td class="col-2">
                             <VueDraggableNext v-model="weekdays.jeudi" :group="{ name: 'meals' }" class=""
                                 @end="daychange('jeudi')">
                                 <template v-for="meal in weekdays.jeudi" :key="meal.id">
-                                    <div :class="['drag-el', getMealClass(meal.type.id), sortMealsByType('jeudi')]">
+                                    <div :class="['drag-el', getMealClass(meal.mealType), sortMealsByType('jeudi')]">
                                         {{ meal.name }}
                                         <button class="delete-button"
                                             @click="deleteMealFromDay('jeudi', meal.id)">✖</button>
@@ -95,11 +96,11 @@
                                 </template>
                             </VueDraggableNext>
                         </td>
-                        <td>
+                        <td class="col-2">
                             <VueDraggableNext v-model="weekdays.vendredi" :group="{ name: 'meals' }" class=""
                                 @end="daychange('vendredi')">
                                 <template v-for="meal in weekdays.vendredi" :key="meal.id">
-                                    <div :class="['drag-el', getMealClass(meal.type.id), sortMealsByType('vendredi')]">
+                                    <div :class="['drag-el', getMealClass(meal.mealType), sortMealsByType('vendredi')]">
                                         {{ meal.name }}
                                         <button class="delete-button"
                                             @click="deleteMealFromDay('vendredi', meal.id)">✖</button>
@@ -107,11 +108,11 @@
                                 </template>
                             </VueDraggableNext>
                         </td>
-                        <td>
+                        <td class="col-2">
                             <VueDraggableNext v-model="weekdays.samedi" :group="{ name: 'meals' }" class=""
                                 @end="daychange('samedi')">
                                 <template v-for="meal in weekdays.samedi" :key="meal.id">
-                                    <div :class="['drag-el', getMealClass(meal.type.id), sortMealsByType('samedi')]">
+                                    <div :class="['drag-el', getMealClass(meal.mealType), sortMealsByType('samedi')]">
                                         {{ meal.name }}
                                         <button class="delete-button"
                                             @click="deleteMealFromDay('samedi', meal.id)">✖</button>
@@ -119,11 +120,11 @@
                                 </template>
                             </VueDraggableNext>
                         </td>
-                        <td>
+                        <td class="col-2">
                             <VueDraggableNext v-model="weekdays.dimanche" :group="{ name: 'meals' }" class=""
                                 @end="daychange('dimanche')">
                                 <template v-for="meal in weekdays.dimanche" :key="meal.id">
-                                    <div :class="['drag-el', getMealClass(meal.type.id), sortMealsByType('dimanche')]">
+                                    <div :class="['drag-el', getMealClass(meal.mealType), sortMealsByType('dimanche')]">
                                         {{ meal.name }}
                                         <button class="delete-button"
                                             @click="deleteMealFromDay('dimanche', meal.id)">✖</button>
@@ -154,12 +155,13 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import type { Products, Meals, FullCalendarEvent, Menu, MealsDataToDisplay } from '@/config/interfaces'
+import type { Products, Meals, FullCalendarEvent, Menu } from '@/config/interfaces'
 // import EventsService from '@/services/EventsService'
 import MealsService from '@/services/MealsService'
 import ProductsService from '@/services/ProductsServices'
 import MenuService from '@/services/MenusService'
 import { VueDraggableNext } from 'vue-draggable-next'
+import { sort } from '@formkit/drag-and-drop'
 // import { get } from 'http'
 
 const MealsList = ref<Meals[]>([])
@@ -168,7 +170,7 @@ const ProductsList = ref<Products[]>([])
 const EventsList = ref<FullCalendarEvent[]>([])
 const MenuSelected = ref<Menu[]>([])
 const selectedMealTypes = ref<string[]>([])
-const weekdays = ref<Record<string, MealsDataToDisplay[]>>({
+const weekdays = ref<Record<string, Meals[]>>({
     lundi: [],
     mardi: [],
     mercredi: [],
@@ -183,19 +185,38 @@ const props = defineProps<{
 }>()
 
 const filterMealsSelector = (mealType: string) => {
-    const index = selectedMealTypes.value.indexOf(mealType)
+    const index = selectedMealTypes.value.indexOf(mealType);
+
+    // Ajouter ou retirer le type de repas sélectionné
     if (index > -1) {
-        selectedMealTypes.value.splice(index, 1)
+        selectedMealTypes.value.splice(index, 1);
     } else {
-        selectedMealTypes.value.push(mealType)
+        selectedMealTypes.value.push(mealType);
     }
 
+    // Filtrer les repas à afficher
     if (selectedMealTypes.value.length === 0) {
-        MealstoDisplay.value = MealsList.value
+        MealstoDisplay.value = MealsList.value;
     } else {
-        MealstoDisplay.value = MealsList.value.filter(meal => selectedMealTypes.value.includes(meal.type.name))
+        MealstoDisplay.value = MealsList.value.filter(meal =>
+            selectedMealTypes.value.includes(getMealTypeName(meal.mealType))
+        );
     }
-}
+};
+
+// Fonction utilitaire pour convertir `mealType` en nom lisible
+const getMealTypeName = (mealType: number): string => {
+    switch (mealType) {
+        case 0:
+            return 'entree';
+        case 1:
+            return 'plat';
+        case 2:
+            return 'dessert';
+        default:
+            return '';
+    }
+};
 
 const filertMealSelectorByName = (event: Event) => {
     const search = (event.target as HTMLInputElement).value
@@ -246,17 +267,22 @@ const getMealClass = (mealType: number) => {
 }
 
 const sortMealsByType = (day: string) => {
-    console.log(day)
+    if (!weekdays.value[day]) {
+        console.error(`Invalid day: ${day}`);
+        return [];
+    }
+
+    // Tri des repas par type (entrée, plat, dessert)
     return weekdays.value[day].sort((a, b) => {
-        if (a.type.id < b.type.id) {
-            return -1
+        if (a.mealType < b.mealType) {
+            return -1;
         }
-        if (a.type.id > b.type.id) {
-            return 1
+        if (a.mealType > b.mealType) {
+            return 1;
         }
-        return 0
-    })
-}
+        return 0;
+    });
+};
 
 const saveData = () => {
     closeModal()
@@ -279,31 +305,22 @@ const saveData = () => {
 }
 
 onMounted(async () => {
-    MealsList.value = await MealsService.getMealsDataToDisplay()
+    MealsList.value = await MealsService.getMeals()
+    console.log(MealsList.value)
     MealstoDisplay.value = MealsList.value
     ProductsList.value = await ProductsService.getProducts()
     if (props.menu.id.length > 0) {
-        MenuSelected.value = await MenuService.getMenuById('67d96d28210cadc7612e9235')
-        MenuSelected.value.days.lundi.forEach(element => {
-            weekdays.value.lundi.push(MealsList.value.find(meal => meal.id === element))
-        });
-        MenuSelected.value.days.mardi.forEach(element => {
-            weekdays.value.mardi.push(MealsList.value.find(meal => meal.id === element))
-        });
-        MenuSelected.value.days.mercredi.forEach(element => {
-            weekdays.value.mercredi.push(MealsList.value.find(meal => meal.id === element))
-        });
-        MenuSelected.value.days.jeudi.forEach(element => {
-            weekdays.value.jeudi.push(MealsList.value.find(meal => meal.id === element))
-        });
-        MenuSelected.value.days.vendredi.forEach(element => {
-            weekdays.value.vendredi.push(MealsList.value.find(meal => meal.id === element))
-        });
-        MenuSelected.value.days.samedi.forEach(element => {
-            weekdays.value.samedi.push(MealsList.value.find(meal => meal.id === element))
-        });
-        MenuSelected.value.days.dimanche.forEach(element => {
-            weekdays.value.dimanche.push(MealsList.value.find(meal => meal.id === element))
+        MenuSelected.value = await MenuService.getMenuById('67dd5914443c753314d30e0e')
+        console.log(MenuSelected.value)
+        Object.keys(MenuSelected.value.days).forEach(day => {
+            MenuSelected.value.days[day].forEach(element => {
+                const meal = MealsList.value.find(meal => meal.id === '67dd5791443c753314d30c73');
+
+                console.log(meal)
+                if (meal) {
+                    weekdays.value[day].push(meal);
+                }
+            });
         });
     }
 })
