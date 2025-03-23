@@ -17,11 +17,9 @@
                         <input @change="filertMealSelectorByName($event)" type="text" placeholder="Search..." />
                     </div>
                 </div>
-
-                <!-- systeme de tri des plats -->
-                <ul v-if="MealstoDisplay.length > 0" class="mealcontainer">
-                    <VueDraggableNext v-model="MealstoDisplay" :group="{ name: 'meals', pull: 'clone', put: false }"
-                        @end="onMealsListChange">
+                <ul v-if="MealstoDisplay.length > 0" class="">
+                    <VueDraggableNext class="mealcontainer" v-model="MealstoDisplay"
+                        :group="{ name: 'meals', pull: 'clone', put: false }" @end="onMealsListChange">
                         <li v-for="meal in MealstoDisplay" :key="meal.id" class="drag-el">
                             <p>{{ meal.name }}</p>
                         </li>
@@ -36,19 +34,19 @@
             <table class="titletable">
                 <thead>
                     <tr>
-                        <th class="">Lundi</th>
-                        <th class="">Mardi</th>
-                        <th class="">Mercredi</th>
-                        <th class="">Jeudi</th>
-                        <th class="">Vendredi</th>
-                        <th class="">Samedi</th>
-                        <th class="">Dimanche</th>
+                        <th class="col-md-4">Lundi</th>
+                        <th class="col-md-4">Mardi</th>
+                        <th class="col-md-4">Mercredi</th>
+                        <th class="col-md-4">Jeudi</th>
+                        <th class="col-md-4">Vendredi</th>
+                        <th class="col-md-4">Samedi</th>
+                        <th class="col-md-4">Dimanche</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="col-2">
-                            <VueDraggableNext v-model="weekdays.lundi" :group="{ name: 'meals' }"
+                        <td class="col-md-4">
+                            <VueDraggableNext v-model="weekdays.lundi" :group="{ name: 'meals' }" class="draggablezone"
                                 @end="daychange('lundi')">
                                 <template v-for="meal in weekdays.lundi" :key="meal.id">
                                     <div :class="['drag-el', getMealClass(meal.mealType), sortMealsByType('lundi')]">
@@ -60,8 +58,8 @@
                             </VueDraggableNext>
                         </td>
 
-                        <td class="col-2">
-                            <VueDraggableNext v-model="weekdays.mardi" :group="{ name: 'meals' }" class=""
+                        <td class="col-md-4">
+                            <VueDraggableNext v-model="weekdays.mardi" :group="{ name: 'meals' }" class="draggablezone"
                                 @end="daychange('mardi')">
                                 <template v-for="meal in weekdays.mardi" :key="meal.id">
                                     <div :class="['drag-el', getMealClass(meal.mealType), sortMealsByType('mardi')]">
@@ -72,9 +70,9 @@
                                 </template>
                             </VueDraggableNext>
                         </td>
-                        <td class="col-2">
-                            <VueDraggableNext v-model="weekdays.mercredi" :group="{ name: 'meals' }" class=""
-                                @end="daychange('mercredi')">
+                        <td class="col-md-4">
+                            <VueDraggableNext v-model="weekdays.mercredi" :group="{ name: 'meals' }"
+                                class="draggablezone" @end="daychange('mercredi')">
                                 <template v-for="meal in weekdays.mercredi" :key="meal.id">
                                     <div :class="['drag-el', getMealClass(meal.mealType), sortMealsByType('mercredi')]">
                                         {{ meal.name }}
@@ -84,8 +82,8 @@
                                 </template>
                             </VueDraggableNext>
                         </td>
-                        <td class="col-2">
-                            <VueDraggableNext v-model="weekdays.jeudi" :group="{ name: 'meals' }" class=""
+                        <td class="col-md-4">
+                            <VueDraggableNext v-model="weekdays.jeudi" :group="{ name: 'meals' }" class="draggablezone"
                                 @end="daychange('jeudi')">
                                 <template v-for="meal in weekdays.jeudi" :key="meal.id">
                                     <div :class="['drag-el', getMealClass(meal.mealType), sortMealsByType('jeudi')]">
@@ -96,9 +94,9 @@
                                 </template>
                             </VueDraggableNext>
                         </td>
-                        <td class="col-2">
-                            <VueDraggableNext v-model="weekdays.vendredi" :group="{ name: 'meals' }" class=""
-                                @end="daychange('vendredi')">
+                        <td class="col-md-4">
+                            <VueDraggableNext v-model="weekdays.vendredi" :group="{ name: 'meals' }"
+                                class="draggablezone" @end="daychange('vendredi')">
                                 <template v-for="meal in weekdays.vendredi" :key="meal.id">
                                     <div :class="['drag-el', getMealClass(meal.mealType), sortMealsByType('vendredi')]">
                                         {{ meal.name }}
@@ -108,8 +106,8 @@
                                 </template>
                             </VueDraggableNext>
                         </td>
-                        <td class="col-2">
-                            <VueDraggableNext v-model="weekdays.samedi" :group="{ name: 'meals' }" class=""
+                        <td class="col-md-4">
+                            <VueDraggableNext v-model="weekdays.samedi" :group="{ name: 'meals' }" class="draggablezone"
                                 @end="daychange('samedi')">
                                 <template v-for="meal in weekdays.samedi" :key="meal.id">
                                     <div :class="['drag-el', getMealClass(meal.mealType), sortMealsByType('samedi')]">
@@ -120,9 +118,9 @@
                                 </template>
                             </VueDraggableNext>
                         </td>
-                        <td class="col-2">
-                            <VueDraggableNext v-model="weekdays.dimanche" :group="{ name: 'meals' }" class=""
-                                @end="daychange('dimanche')">
+                        <td class="col-md-4">
+                            <VueDraggableNext v-model="weekdays.dimanche" :group="{ name: 'meals' }"
+                                class="draggablezone" @end="daychange('dimanche')">
                                 <template v-for="meal in weekdays.dimanche" :key="meal.id">
                                     <div :class="['drag-el', getMealClass(meal.mealType), sortMealsByType('dimanche')]">
                                         {{ meal.name }}
@@ -300,21 +298,20 @@ const saveData = () => {
     }
     MenuService.createMenus(menu)
     props.menu.show = false
-    // reset datas ?
-    // return date to parents ? 
 }
 
 onMounted(async () => {
+
     MealsList.value = await MealsService.getMeals()
     console.log(MealsList.value)
     MealstoDisplay.value = MealsList.value
     ProductsList.value = await ProductsService.getProducts()
     if (props.menu.id.length > 0) {
-        MenuSelected.value = await MenuService.getMenuById('67dd5914443c753314d30e0e')
+        MenuSelected.value = await MenuService.getMenuById(props.menu.id)
         console.log(MenuSelected.value)
         Object.keys(MenuSelected.value.days).forEach(day => {
             MenuSelected.value.days[day].forEach(element => {
-                const meal = MealsList.value.find(meal => meal.id === '67dd5791443c753314d30c73');
+                const meal = MealsList.value.find(meal => meal.id === element);
 
                 console.log(meal)
                 if (meal) {
@@ -377,6 +374,7 @@ onMounted(async () => {
 }
 
 .mealcontainer {
+
     margin-top: 1vh;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -385,6 +383,10 @@ onMounted(async () => {
     background-color: #f8f9fa;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-height: 80vh;
+    overflow-y: auto;
+
+
 }
 
 .container {
@@ -392,6 +394,11 @@ onMounted(async () => {
     flex-direction: row;
     height: 100vh;
     width: 100vw;
+}
+
+.draggablezone {
+    min-width: 5vw;
+    min-height: 5vh;
 }
 
 
@@ -457,16 +464,18 @@ onMounted(async () => {
 }
 
 .titletable {
-    width: 100%;
+    width: 80vw;
+    table-layout: fixed;
     border-collapse: collapse;
-    margin-bottom: 20px;
 }
 
-th,
-td {
+.titletable th,
+.titletable td {
+    width: 14%;
     padding: 15px;
     text-align: center;
     border: 1px solid #ddd;
+    vertical-align: top;
 }
 
 .save-button {

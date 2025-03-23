@@ -1,119 +1,27 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { Draggable } from '@fullcalendar/interaction/index.js'
+import type { Menu } from '@/config/interfaces'
+import MenusService from '@/services/MenusService'
 
-const MENUS = [
-  {
-    id: '67c97bed0361520f65a31abc',
-    name: 'Menu 1',
-    days: [
-      {
-        starter: [{ id: '67c97bed0361520f65a31fae', name: 'Onion rings' }],
-        mainCourse: [
-          {
-            id: '67c97b5e0361520f65a31f92',
-            name: 'Pizza margherita',
-          },
-        ],
-        dessert: [
-          {
-            id: '67c97bc20361520f65a31fa1',
-            name: 'Vanilla ice cream',
-          },
-        ],
-      },
-      {
-        starter: [{ id: '67c97bed0361520f65a31fae', name: 'Onion rings' }],
-        mainCourse: [
-          {
-            id: '67c97b5e0361520f65a31f92',
-            name: 'Pizza margherita',
-          },
-        ],
-        dessert: [
-          {
-            id: '67c97bc20361520f65a31fa1',
-            name: 'Vanilla ice cream',
-          },
-        ],
-      },
-      {
-        starter: [{ id: '67c97bed0361520f65a31fae', name: 'Onion rings' }],
-        mainCourse: [
-          {
-            id: '67c97b5e0361520f65a31f92',
-            name: 'Pizza margherita',
-          },
-        ],
-        dessert: [
-          {
-            id: '67c97bc20361520f65a31fa1',
-            name: 'Vanilla ice cream',
-          },
-        ],
-      },
-      {
-        starter: [{ id: '67c97bed0361520f65a31fae', name: 'Onion rings' }],
-        mainCourse: [
-          {
-            id: '67c97b5e0361520f65a31f92',
-            name: 'Pizza margherita',
-          },
-        ],
-        dessert: [
-          {
-            id: '67c97bc20361520f65a31fa1',
-            name: 'Vanilla ice cream',
-          },
-        ],
-      },
-      {
-        starter: [{ id: '67c97bed0361520f65a31fae', name: 'Onion rings' }],
-        mainCourse: [
-          {
-            id: '67c97b5e0361520f65a31f92',
-            name: 'Pizza margherita',
-          },
-        ],
-        dessert: [
-          {
-            id: '67c97bc20361520f65a31fa1',
-            name: 'Vanilla ice cream',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: '67c97bed0361520f65a31def',
-    name: 'Menu 2',
-    days: [
-      {
-        starter: [{ id: '67c97bed0361520f65a31fae', name: 'Onion rings' }],
-        mainCourse: [
-          {
-            id: '67c97b5e0361520f65a31f92',
-            name: 'Pizza margherita',
-          },
-        ],
-        dessert: [
-          {
-            id: '67c97bc20361520f65a31fa1',
-            name: 'Vanilla ice cream',
-          },
-        ],
-      },
-    ],
-  },
-]
-const menus = ref(MENUS)
-onMounted(() => {
-  menus.value?.forEach((event, i) => {
-    let el = document.getElementById(event.id.toString())
-    new Draggable(el as HTMLElement, {
-      eventData: menus.value[i],
-      // itemSelector: '.item',
-    })
+const menus = ref<Menu[]>([]) // Liste des menus
+
+onMounted(async () => {
+  menus.value = await MenusService.getMenus()
+  console.log('Menus récupérés :', menus.value)
+  menus.value?.forEach((menu) => {
+    const el = document.getElementById(menu.id)
+    if (el) {
+      console.log(`Initialisation du Draggable pour le menu : ${menu.name}`)
+      new Draggable(el, {
+        eventData: {
+          id: menu.id,
+          title: menu.name,
+        },
+      })
+    } else {
+      console.error(`Élément non trouvé pour le menu avec ID : ${menu.id}`)
+    }
   })
 })
 </script>
@@ -124,7 +32,7 @@ onMounted(() => {
       <!-- <div class="item rounded" @click="$emit('menu:add')">new menu</div> -->
       <div class="wrapper">
         <div v-for="menu in menus" class="p-1 text-center">
-          <div :id="menu.id.toString()" class="item rounded" @click="$emit('menu:selected', menu)">
+          <div :id="menu.id" class="item rounded" @click="$emit('menu:selected', menu)">
             {{ menu.name }}
           </div>
         </div>
