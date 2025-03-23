@@ -1,27 +1,22 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import { Draggable } from '@fullcalendar/interaction/index.js'
 import type { Menu } from '@/config/interfaces'
-import MenusService from '@/services/MenusService'
+import { MenusService } from '@/services/MenusService'
 
+const menusService = new MenusService()
 const menus = ref<Menu[]>([]) // Liste des menus
 
 onMounted(async () => {
-  menus.value = await MenusService.getMenus()
-  console.log('Menus récupérés :', menus.value)
-  menus.value?.forEach((menu) => {
-    const el = document.getElementById(menu.id)
-    if (el) {
-      console.log(`Initialisation du Draggable pour le menu : ${menu.name}`)
-      new Draggable(el, {
-        eventData: {
-          id: menu.id,
-          title: menu.name,
-        },
-      })
-    } else {
-      console.error(`Élément non trouvé pour le menu avec ID : ${menu.id}`)
-    }
+  menus.value = await menusService.getMenus()
+
+  menus.value.forEach(async (event, i) => {
+    const id = await event.id
+    let el = document.getElementById(event.id)
+    new Draggable(el as HTMLElement, {
+      eventData: menus.value[i],
+      // itemSelector: '.item',
+    })
   })
 })
 </script>

@@ -53,9 +53,9 @@ const calendarOptions: CalendarOptions = {
     node.prepend(iconType)
     node.appendChild(editIcon)
   },
-  eventReceive(arg) {
+  eventReceive(arg) {    
     if (arg.event.extendedProps.days) {
-      arg.revert()
+      arg.revert()      
       emit('menus:add', arg.event)
     }
   },

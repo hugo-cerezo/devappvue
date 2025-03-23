@@ -2,10 +2,11 @@
 import Calendar from '@/components/Calendar.vue'
 import Modal from '@/components/Modal.vue'
 import Sidebar from '@/components/Sidebar.vue'
-import { ref } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import { dateFormater } from '@/helpers/dateFormater'
 import type { DateClickArg } from '@fullcalendar/interaction/index.js'
-import type { FullCalendarEvent } from '@/config/interfaces'
+import type { FullCalendarEvent, Menu } from '@/config/interfaces'
+import { MenusService } from '@/services/MenusService'
 
 const generateUniqueId = () => '_' + Math.random().toString(36).substr(2, 9)
 const show = ref(false)
@@ -38,8 +39,14 @@ const insertMenu = (event: any) => {
   const menu = event.extendedProps
   const start: Date = event.start
 
-  menu.days.forEach((day: any, i: number) => {
+  Object.keys(menu.days).forEach((key: any, i: number) => {
     const date = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i)
+    console.log(date)
+
+    const data = {
+      start: date,
+      meals: 'ids',
+    }
 
     const createEvent = (item: any, type: number, color: string) => {
       const data = {
@@ -57,12 +64,16 @@ const insertMenu = (event: any) => {
       events.value.push(data)
     }
 
-    day.starter.forEach((starter: any) => createEvent(starter, 0, 'red'))
-    day.mainCourse.forEach((mainCourse: any) => createEvent(mainCourse, 1, 'blue'))
-    day.dessert.forEach((dessert: any) => createEvent(dessert, 2, 'green'))
+    console.log(menu.days[key])
+
+    // menu.days[key].starter.forEach((starter: any) => createEvent(starter, 0, 'red'))
+    // menu.days[key].mainCourse.forEach((mainCourse: any) => createEvent(mainCourse, 1, 'blue'))
+    // menu.days[key].dessert.forEach((dessert: any) => createEvent(dessert, 2, 'green'))
   })
 
   console.log(events.value)
+
+  // Update the events in the calendar
 }
 
 const formRemove = () => {
@@ -74,11 +85,9 @@ const formRemove = () => {
   show.value = false
 }
 
-
-
 const handleFormAdd = (values: any) => {
   console.log(values)
-  return;
+  return
   events.value.push({ ...values, date: date?.value?.dateStr })
   show.value = false
   modalWidth.value = 75
@@ -103,18 +112,25 @@ const handleFormEdit = (values: any) => {
     :event="selectedEvent"
     :menu="selectedMenu"
     :width="modalWidth"
-    @modal:show="(() => { show = false; type = '' })"
+    @modal:show="
+      () => {
+        show = false
+        type = ''
+      }
+    "
     @form:add="handleFormAdd"
     @form:edit="handleFormEdit"
     @form:remove="formRemove"
   />
   <Sidebar
-    @menu:selected="(menu) => {
-      show = !show
-      type = 'menu:description'
-      selectedMenu = menu
-      modalWidth = 90
-    }"
+    @menu:selected="
+      (menu) => {
+        show = !show
+        type = 'menu:description'
+        selectedMenu = menu
+        modalWidth = 90
+      }
+    "
   />
   <Calendar
     :events="events"
