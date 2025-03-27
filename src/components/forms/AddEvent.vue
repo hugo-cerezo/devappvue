@@ -8,13 +8,18 @@ import AddProduct from './fragments/AddProduct.vue'
 import ExistingProducts from './fragments/ExistingProducts.vue'
 import type { Meals, Products } from '@/config/interfaces'
 import { MealsService } from '@/services/MealsService'
+import { mealModalStore, menuModalStore } from '@/helpers/modalStore'
 
-const emit = defineEmits(['cancel', 'confirm'])
+const emit = defineEmits(['cancel', 'confirm', 'form:add'])
 const selectedAction = ref('existing')
 const selectedExistingEntry = ref(null)
 const meals = ref<Meals[]>([])
 const api = new MealsService()
-
+const props = defineProps<{
+  menu: Object, // Déclare la prop `menu`
+  events: Object, // Déclare la prop `events`
+  show: Boolean, // Si nécessaire
+}>()
 const name = ref('')
 const type = ref([])
 const products = ref<Products[]>([])
@@ -36,8 +41,11 @@ const confirm = () => {
   clear()
 }
 const cancel = () => {
-  emit('cancel')
-  clear()
+  if (menuModalStore().type != null) {
+    mealModalStore().closeModal()
+    menuModalStore().openModal(menuModalStore().type, menuModalStore().data)
+    clear()
+  }
 }
 
 const removeProduct = (product: Products) => {
@@ -48,7 +56,16 @@ const removeProduct = (product: Products) => {
 }
 
 onMounted(async () => {
-  meals.value = await api.getMeals()
+  if (mealModalStore().type === 'meal:add' && mealModalStore().data.meal.id) {
+    console.log('here')
+    meals.value = await api.getMealsById(mealModalStore().data.meal.id)
+    console.log(meals.value, 'meals')
+    // modify code to only display new meal but with meal datas
+  } else {
+    meals.value = await api.getMeals()
+    console.log(props, 'props')
+  }
+
 })
 </script>
 

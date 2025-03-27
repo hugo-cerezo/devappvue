@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import type { Meals } from '@/config/interfaces'
+import { mealModalStore } from '@/helpers/modalStore';
 import { MealsService } from '@/services/MealsService'
 import { ref, onMounted } from 'vue'
 
 const props = defineProps<{ events: any }>()
-const name = props.events.event._def.title
+const name = mealModalStore().data.name
 const datas = ref<Meals[]>([])
 const mealsService = new MealsService()
 
 onMounted(async () => {
   datas.value = await mealsService.getMealByName(name)
+  console.log(datas.value)
 })
 </script>
 

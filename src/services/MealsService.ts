@@ -1,3 +1,4 @@
+import type { get } from 'http'
 import ApiService from './ApiService'
 import type { Meals } from '@/config/interfaces'
 
@@ -16,6 +17,10 @@ export class MealsService extends ApiService {
 
   getMealByName(name: string) {
     return this.request(`Meals/getmealsbyname?name=${name}`)
+  }
+
+  getMealsById(id: string) {
+    return this.request(`Meals/getmealsbyid/${id}`)
   }
 
   getMealsDataToDisplay() {

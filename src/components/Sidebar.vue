@@ -3,6 +3,7 @@ import { onBeforeMount, onMounted, ref } from 'vue'
 import { Draggable } from '@fullcalendar/interaction/index.js'
 import type { Menu } from '@/config/interfaces'
 import { MenusService } from '@/services/MenusService'
+import { menuModalStore, useModalStore } from '@/helpers/modalStore'
 
 const menusService = new MenusService()
 const menus = ref<Menu[]>([]) // Liste des menus
@@ -19,15 +20,21 @@ onMounted(async () => {
     })
   })
 })
+
+const openMenu = (menu?: Menu) => {
+  menuModalStore().openModal('menu:description', menu)
+}
+
+
 </script>
 <template>
   <div class="col-2 me-1">
     <div class="border h-100">
       <p>Menus</p>
-      <!-- <div class="item rounded" @click="$emit('menu:add')">new menu</div> -->
+      <div class="item rounded" @click="openMenu()">new menu</div>
       <div class="wrapper">
         <div v-for="menu in menus" class="p-1 text-center">
-          <div :id="menu.id" class="item rounded" @click="$emit('menu:selected', menu)">
+          <div :id="menu.id" class="item rounded" @click="openMenu(menu)">
             {{ menu.name }}
           </div>
         </div>

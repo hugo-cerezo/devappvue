@@ -7,12 +7,14 @@ import { dateFormater } from '@/helpers/dateFormater'
 import type { DateClickArg } from '@fullcalendar/interaction/index.js'
 import type { FullCalendarEvent, Menu } from '@/config/interfaces'
 import { MenusService } from '@/services/MenusService'
+import { emit } from 'process'
 
 const generateUniqueId = () => '_' + Math.random().toString(36).substr(2, 9)
 const show = ref(false)
 const type = ref('')
 const selectedEvent = ref()
 const date = ref<DateClickArg>()
+const menu: any = null
 const selectedMenu = ref()
 const modalWidth = ref()
 const events = ref<FullCalendarEvent[]>([])
@@ -86,11 +88,12 @@ const formRemove = () => {
 }
 
 const handleFormAdd = (values: any) => {
-  console.log(values)
+  console.log('agendavue', values)
+  selectedEvent.value = values
+  type.value = 'form:add'
+  menu.value = values.menu
+  show.value = true
   return
-  events.value.push({ ...values, date: date?.value?.dateStr })
-  show.value = false
-  modalWidth.value = 75
 }
 
 const handleFormEdit = (values: any) => {
@@ -106,37 +109,21 @@ const handleFormEdit = (values: any) => {
 </script>
 
 <template>
-  <Modal
-    :show="show"
-    :type="type"
-    :event="selectedEvent"
-    :menu="selectedMenu"
-    :width="modalWidth"
-    @modal:show="
-      () => {
-        show = false
-        type = ''
-      }
-    "
-    @form:add="handleFormAdd"
-    @form:edit="handleFormEdit"
-    @form:remove="formRemove"
-  />
-  <Sidebar
-    @menu:selected="
-      (menu) => {
-        show = !show
-        type = 'menu:description'
-        selectedMenu = menu
-        modalWidth = 90
-      }
-    "
-  />
-  <Calendar
-    :events="events"
-    @modal:create="(newDate) => handleEvent(newDate, 'form:add')"
+  <Modal :show="show" :type="type" :event="selectedEvent" :menu="selectedMenu" :width="modalWidth" @modal:show="
+    () => {
+      show = false
+      type = ''
+    }
+  " @form:add="handleFormAdd" @form:edit="handleFormEdit" @form:remove="formRemove" />
+  <Sidebar @form:add="handleFormAdd" @menu:selected="
+    (menu) => {
+      show = !show
+      type = 'menu:description'
+      selectedMenu = menu
+      modalWidth = 90
+    }
+  " />
+  <Calendar @form:add="handleFormAdd" :events="events" @modal:create="(newDate) => handleEvent(newDate, 'form:add')"
     @modal:edit="(data) => handleEvent(data, 'form:edit')"
-    @modal:describe="(event) => handleEvent(event, 'show:description')"
-    @menus:add="insertMenu"
-  />
+    @modal:describe="(event) => handleEvent(event, 'show:description')" @menus:add="insertMenu" />
 </template>

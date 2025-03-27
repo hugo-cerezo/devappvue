@@ -3,7 +3,7 @@
 import GoogleSignInPlugin from 'vue3-google-signin'
 import { GOOGLE_CLIENT_ID } from './config/constant'
 import { BootstrapIconsPlugin } from 'bootstrap-icons-vue'
-
+import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -12,6 +12,7 @@ import router from './router'
 import AddEvent from './components/forms/AddEvent.vue'
 
 const app = createApp(App)
+const pinia = createPinia()
 
 app.use(router)
 app.use(BootstrapIconsPlugin)
@@ -21,5 +22,5 @@ app.use(GoogleSignInPlugin, {
 
 // Register components
 app.component('AddEvent', AddEvent)
-
+app.use(pinia)
 app.mount('#app')

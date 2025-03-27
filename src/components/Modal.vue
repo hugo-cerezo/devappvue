@@ -2,45 +2,63 @@
 import AddEvent from './forms/AddEvent.vue'
 import EditEvent from './forms/EditEvent.vue'
 import Description from '@/views/Description.vue'
-import MenuDetail from './MenuDetail.vue'
-import MenusGestionView from '@/views/MenusGestionView.vue';
+import MenusGestionView from '@/views/MenusGestionView.vue'
+import { mealModalStore, menuModalStore, useModalStore } from '@/helpers/modalStore'
 
-const props = defineProps<{
-  show: boolean
-  type: string
-  event?: any
-  menu?: any
-  width?: number
-}>()
-
-const emit = defineEmits(['modal:show', 'form:add', 'form:edit', 'form:remove'])
-
+// Initialisation du store Pinia
+const modalstore = menuModalStore()
+const mealstore = mealModalStore()
+defineProps({
+  show: Boolean,
+  type: String,
+  event: Object,
+  menu: Object,
+  width: Number,
+})
+defineEmits(['modal:show', 'form:add', 'form:edit', 'form:remove'])
+// Méthode pour fermer la modale
 const hideModal = (event: MouseEvent) => {
   const target = (event.target as HTMLElement).className
-  console.log(props)
-
-  if (target === 'modal') emit('modal:show', !props.show)
+  if (target === 'modal') modalstore.closeModal() // Ferme la modale via le store
 }
 </script>
+
 <template>
-  <div class="modal" v-show="props.show" @click="(event: MouseEvent) => hideModal(event)" :style="{
-    paddingLeft: `${100 - (props.width ?? 75)}%`,
-    paddingRight: `${100 - (props.width ?? 75)}%`,
-  }">
+  <!-- La modale s'affiche uniquement si modalstore.isOpen est true -->
+  <div class="modal" v-if="modalstore.isOpen && modalstore.type === 'menu:description'"
+    @click="(event: MouseEvent) => hideModal(event)" :style="{
+      paddingLeft: `${100 - (modalstore.width ?? 95)}%`,
+      paddingRight: `${100 - (modalstore.width ?? 95)}%`,
+    }">
     <div class="modal-content">
       <slot name="modal-slot-content">
-        <AddEvent v-if="props.type == 'form:add'" @cancel="emit('modal:show', false)"
-          @confirm="(values: any) => emit('form:add', values)" />
+        <!-- <AddEvent :menu="props.menu" :show="props.show" @form:add="handleFormAdd" v-if="props.type == 'form:add'"
+          @cancel="emit('modal:show', false)" @confirm="(values: any) => emit('form:add', values)" />
         <EditEvent v-if="props.type == 'form:edit' && props.event" :data="props.event"
           @cancel="() => emit('modal:show', false)" @confirm="(values: any) => emit('form:edit', values)"
           @remove="emit('form:remove')" />
-        <Description v-if="props.type == 'show:description'" :events="props.event" />
-        <!-- <MenuDetail v-if="props.type == 'menu:description'" :menu="props.menu" :show="props.show" /> -->
-        <MenusGestionView v-if="props.type == 'menu:description'" :menu="props.menu" :show="props.show" />
-        <MenusGestionView v-if="props.type == 'menu:add'" :menu="props.menu" :show="props.show" />
+        <Description v-if="props.type == 'show:description'" :events="props.event" /> -->
+        <!-- Affiche le composant MenusGestionView si le type correspond -->
+        <MenusGestionView v-if="modalstore.type === 'menu:description'" :menu="modalstore.data"
+          :show="modalstore.isOpen" />
+
+        <!-- <Description v-if="mealstore.type === 'meal:description'" :events="modalstore.data" :show="mealstore.isOpen" /> -->
       </slot>
     </div>
   </div>
+  <div class="modal" v-if="mealstore.isOpen && mealstore.type === 'meal:add'"
+    @click="(event: MouseEvent) => hideModal(event)" :style="{
+      paddingLeft: `${100 - (mealstore.width ?? 75)}%`,
+      paddingRight: `${100 - (mealstore.width ?? 75)}%`,
+    }">
+    <div class="modal-content">
+      <slot name="modal-slot-content">
+        <AddEvent v-if="mealstore.type === 'meal:add'" :menu="mealstore.data" :events="mealstore.data"
+          :show="mealstore.isOpen" />
+      </slot>
+    </div>
+  </div>
+
 </template>
 
 <style scoped>
@@ -54,6 +72,7 @@ const hideModal = (event: MouseEvent) => {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
 }
 
 .modal-content {
