@@ -1,5 +1,4 @@
-import type { get } from 'http'
-import ApiService from './ApiService'
+import ApiService from './apiService'
 import type { Meals } from '@/config/interfaces'
 
 export class MealsService extends ApiService {

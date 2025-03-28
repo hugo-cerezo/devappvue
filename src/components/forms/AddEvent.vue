@@ -60,12 +60,11 @@ onMounted(async () => {
     console.log('here')
     meals.value = await api.getMealsById(mealModalStore().data.meal.id)
     console.log(meals.value, 'meals')
-    // modify code to only display new meal but with meal datas
+    selectedAction.value = 'new'
   } else {
     meals.value = await api.getMeals()
     console.log(props, 'props')
   }
-
 })
 </script>
 
@@ -91,7 +90,8 @@ onMounted(async () => {
       <div class="mb-2">
         <div class="mb-2">
           <label for="" class="mb-3">Nouveau plat</label>
-          <input type="text" placeholder="Nom" v-model="name" class="form-control" />
+          <input type="text" :placeholder="mealModalStore().data.meal ? mealModalStore().data.meal.name : 'Nom'"
+            v-model="name" class="form-control" />
         </div>
         <MealType @update="(d) => (type = d)" />
       </div>
@@ -106,7 +106,7 @@ onMounted(async () => {
     <div class="d-flex justify-content-end mt-2">
       <button class="btn btn-primary me-1" @click="confirm">Confirm</button>
       <button class="btn btn-danger me-1" @click="cancel">Cancel</button>
-      <button class="btn btn-secondary" @click="selectedAction = 'existing'">
+      <button class="btn btn-secondary" v-if="!mealModalStore().data.meal" @click="selectedAction = 'existing'">
         Plats existants
       </button>
     </div>

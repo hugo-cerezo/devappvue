@@ -12,6 +12,8 @@ import { PRODUCTS_TYPES } from '@/config/constant'
           <input class="form-check-input ms-1" type="checkbox" :name="type" />
         </div>
       </div>
+
     </div>
+    <button class="btn btn-primary mt-2">add product</button>
   </div>
 </template>

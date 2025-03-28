@@ -49,14 +49,16 @@
         </thead>
         <tbody>
           <tr>
-            <td v-for="day in daysOfWeek" :key="day" class="align-top">
+            <td @click.stop="openModal('meal', day)" v-for="day in daysOfWeek" :key="day" class="align-top">
               <draggable v-model="weekdays[day]" :group="{ name: 'meals' }" :itemKey="'id'" class="draggablezone"
                 @end="daychange(day)" @change="sortMealsByType(day)">
                 <template #item="{ element }">
-                  <div @click="openModal('meal', element, day)" :class="['drag-el', getMealClass(element.mealType)]"
+                  <div @click.stop="openModal('meal', element, day)"
+                    :class="['drag-el', getMealClass(element.mealType)]"
                     class="p-2 border rounded mb-2 d-flex justify-content-between align-items-center">
                     <span>{{ element.name }}</span>
-                    <button class="btn btn-sm btn-danger ms-2" @click="deleteMealFromDay(day, element.id)">
+                    <!-- Prevent click propagation to the parent -->
+                    <button class="btn btn-sm btn-danger ms-2" @click.stop="deleteMealFromDay(day, element.id)">
                       ✖
                     </button>
                   </div>
@@ -223,7 +225,7 @@ onMounted(async () => {
     if (props.menu.id.length > 0) {
       MenuSelected.value = await MenuService.getMenuById(props.menu.id)
       Object.keys(MenuSelected.value.days).forEach((day) => {
-        MenuSelected.value.days[day].forEach((element) => {
+        MenuSelected.value.days[day].forEach((element: string) => {
           const meal = MealsList.value.find((meal) => meal.id === element)
           if (meal) {
             weekdays.value[day].push(meal)

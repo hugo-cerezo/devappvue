@@ -1,4 +1,4 @@
-import ApiService from './ApiService'
+import ApiService from './apiService'
 import type { Menu } from '@/config/interfaces'
 
 export class MenusService extends ApiService {

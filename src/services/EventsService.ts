@@ -1,5 +1,5 @@
+import ApiService from './apiService'
 import type { FullCalendarEvent } from '@/config/interfaces'
-import ApiService from './ApiService'
 
 export class EventsService extends ApiService {
   createEvents(Events: FullCalendarEvent) {
@@ -28,4 +28,4 @@ export class EventsService extends ApiService {
     })
   }
 }
-// export default new EventsService()
+export default new EventsService()

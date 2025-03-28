@@ -1,4 +1,4 @@
-import ApiService from './ApiService'
+import ApiService from './apiService'
 import type { Products } from '@/config/interfaces'
 
 export class ProductsService extends ApiService {
@@ -12,6 +12,10 @@ export class ProductsService extends ApiService {
 
   getProducts() {
     return this.request('Products')
+  }
+
+  getproductsById(id: string) {
+    return this.request(`Products/${id}`)
   }
 
   updateProducts(id: Products['id'], Products: Products) {

@@ -19,6 +19,7 @@ defineEmits(['modal:show', 'form:add', 'form:edit', 'form:remove'])
 // Méthode pour fermer la modale
 const hideModal = (event: MouseEvent) => {
   const target = (event.target as HTMLElement).className
+  console.log(target)
   if (target === 'modal') modalstore.closeModal() // Ferme la modale via le store
 }
 </script>
