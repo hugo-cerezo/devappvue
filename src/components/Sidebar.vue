@@ -3,7 +3,8 @@ import { onBeforeMount, onMounted, ref } from 'vue'
 import { Draggable } from '@fullcalendar/interaction/index.js'
 import type { Menu } from '@/config/interfaces'
 import { MenusService } from '@/services/MenusService'
-import { menuModalStore, useModalStore } from '@/helpers/modalStore'
+import { useModalStore } from '@/stores/modalStore'
+import { menuModalStore } from '@/stores/menuStore'
 
 const menusService = new MenusService()
 const menus = ref<Menu[]>([]) // Liste des menus

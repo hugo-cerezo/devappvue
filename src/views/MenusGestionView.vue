@@ -120,7 +120,9 @@ import MealsService from '@/services/MealsService'
 import ProductsService from '@/services/ProductsServices'
 import MenuService from '@/services/MenusService'
 import draggable from 'vuedraggable'
-import { useModalStore, menuModalStore, mealModalStore } from '@/helpers/modalStore'
+import { useModalStore } from '@/stores/modalStore'
+import { menuModalStore } from '@/stores/menuStore'
+import { mealModalStore } from '@/stores/mealStore'
 
 const menuName = ref('')
 const MealsList = ref<Meals[]>([])

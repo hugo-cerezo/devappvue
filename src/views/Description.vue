@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Meals } from '@/config/interfaces'
-import { mealModalStore } from '@/helpers/modalStore';
+import { mealModalStore } from '@/stores/modalStore';
 import { MealsService } from '@/services/MealsService'
 import { ref, onMounted } from 'vue'
 

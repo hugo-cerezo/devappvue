@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { MEAL_TYPES } from '@/config/constant'
-import { mealModalStore } from '@/helpers/modalStore'
+import { mealModalStore } from '@/stores/mealStore'
 import { ref, onMounted } from 'vue'
 
 defineEmits(['update'])
@@ -20,8 +20,15 @@ onMounted(() => {
       <!-- Loop through MEAL_TYPES and create radio buttons -->
       <div class="me-1" v-for="type in MEAL_TYPES" :key="type.id">
         <label :for="type.name">{{ type.name }}</label>
-        <input class="form-check-input ms-1" type="radio" :id="type.name" name="mealType" :value="type.id"
-          v-model="mealType" @change="$emit('update', mealType)" />
+        <input
+          class="form-check-input ms-1"
+          type="radio"
+          :id="type.name"
+          name="mealType"
+          :value="type.id"
+          v-model="mealType"
+          @change="$emit('update', mealType)"
+        />
       </div>
     </div>
   </div>

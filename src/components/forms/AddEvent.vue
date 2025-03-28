@@ -8,7 +8,9 @@ import AddProduct from './fragments/AddProduct.vue'
 import ExistingProducts from './fragments/ExistingProducts.vue'
 import type { Meals, Products } from '@/config/interfaces'
 import { MealsService } from '@/services/MealsService'
-import { mealModalStore, menuModalStore, useModalStore } from '@/helpers/modalStore'
+import { useModalStore } from '@/stores/modalStore'
+import { mealModalStore } from '@/stores/mealStore'
+import { menuModalStore } from '@/stores/menuStore'
 
 const emit = defineEmits(['cancel', 'confirm', 'form:add'])
 const selectedAction = ref('existing')

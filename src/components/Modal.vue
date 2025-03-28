@@ -3,7 +3,9 @@ import AddEvent from './forms/AddEvent.vue'
 import EditEvent from './forms/EditEvent.vue'
 import Description from '@/views/Description.vue'
 import MenusGestionView from '@/views/MenusGestionView.vue'
-import { mealModalStore, menuModalStore, useModalStore } from '@/helpers/modalStore'
+import { useModalStore } from '@/stores/modalStore'
+import { mealModalStore } from '@/stores/mealStore'
+import { menuModalStore } from '@/stores/menuStore'
 
 // Initialisation du store Pinia
 const modalStore = useModalStore()

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { mealModalStore } from '@/helpers/modalStore'
-import { ProductsService } from '@/services/ProductsServices';
-import type { Products } from '@/config/interfaces';
+import { ProductsService } from '@/services/ProductsServices'
+import type { Products } from '@/config/interfaces'
+import { mealModalStore } from '@/stores/mealStore'
 const props = defineProps<{
   values: any[]
 }>()
@@ -12,7 +12,6 @@ const products = ref<Products[]>([])
 const api = new ProductsService()
 
 onMounted(async () => {
-
   if (mealStore.data?.meal?.products) {
     const productIds = mealStore.data.meal.products // Get product IDs from the store
     products.value = await api.getproductsById(productIds) // Fetch products by IDs
@@ -28,8 +27,12 @@ const deletProduct = (productId: string) => {
 <template>
   <div id="product-list" class="w-100 border rounded mb-2">
     <div class="d-flex flex-wrap">
-      <div v-for="product in products" :key="product.id"
-        class="product-list-item border rounded d-flex justify-content-center m-1" @click="deletProduct(product.id)">
+      <div
+        v-for="product in products"
+        :key="product.id"
+        class="product-list-item border rounded d-flex justify-content-center m-1"
+        @click="deletProduct(product.id)"
+      >
         <span class="text-capitalize">{{ product.name }}</span>
       </div>
     </div>
