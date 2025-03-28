@@ -8,7 +8,7 @@ import AddProduct from './fragments/AddProduct.vue'
 import ExistingProducts from './fragments/ExistingProducts.vue'
 import type { Meals, Products } from '@/config/interfaces'
 import { MealsService } from '@/services/MealsService'
-import { mealModalStore, menuModalStore } from '@/helpers/modalStore'
+import { mealModalStore, menuModalStore, useModalStore } from '@/helpers/modalStore'
 
 const emit = defineEmits(['cancel', 'confirm', 'form:add'])
 const selectedAction = ref('existing')
@@ -16,13 +16,17 @@ const selectedExistingEntry = ref(null)
 const meals = ref<Meals[]>([])
 const api = new MealsService()
 const props = defineProps<{
-  menu: Object, // Déclare la prop `menu`
-  events: Object, // Déclare la prop `events`
-  show: Boolean, // Si nécessaire
+  menu: Object // Déclare la prop `menu`
+  events: Object // Déclare la prop `events`
+  show: Boolean // Si nécessaire
 }>()
 const name = ref('')
 const type = ref([])
 const products = ref<Products[]>([])
+
+const modalStore = useModalStore()
+const mealStore = mealModalStore()
+const menuStore = menuModalStore()
 
 const clear = () => {
   name.value = ''
@@ -56,9 +60,9 @@ const removeProduct = (product: Products) => {
 }
 
 onMounted(async () => {
-  if (mealModalStore().type === 'meal:add' && mealModalStore().data.meal.id) {
+  if (modalStore.type === 'meal:add' && mealStore.data.meal.id) {
     console.log('here')
-    meals.value = await api.getMealsById(mealModalStore().data.meal.id)
+    meals.value = await api.getMealsById(mealStore.data.meal.id)
     console.log(meals.value, 'meals')
     selectedAction.value = 'new'
   } else {
@@ -90,8 +94,12 @@ onMounted(async () => {
       <div class="mb-2">
         <div class="mb-2">
           <label for="" class="mb-3">Nouveau plat</label>
-          <input type="text" :placeholder="mealModalStore().data.meal ? mealModalStore().data.meal.name : 'Nom'"
-            v-model="name" class="form-control" />
+          <input
+            type="text"
+            :placeholder="mealStore.data.meal ? mealStore.data.meal.name : 'Nom'"
+            v-model="name"
+            class="form-control"
+          />
         </div>
         <MealType @update="(d) => (type = d)" />
       </div>
@@ -106,7 +114,11 @@ onMounted(async () => {
     <div class="d-flex justify-content-end mt-2">
       <button class="btn btn-primary me-1" @click="confirm">Confirm</button>
       <button class="btn btn-danger me-1" @click="cancel">Cancel</button>
-      <button class="btn btn-secondary" v-if="!mealModalStore().data.meal" @click="selectedAction = 'existing'">
+      <button
+        class="btn btn-secondary"
+        v-if="!mealStore.data.meal"
+        @click="selectedAction = 'existing'"
+      >
         Plats existants
       </button>
     </div>

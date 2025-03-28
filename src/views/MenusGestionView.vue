@@ -7,26 +7,50 @@
       <!-- Checkbox Filters -->
       <div class="checkbox-container">
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="entree" @change="filterMealsSelector('entree')" />
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="entree"
+            @change="filterMealsSelector('entree')"
+          />
           <label class="form-check-label" for="entree">Entrée</label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="plat" @change="filterMealsSelector('plat')" />
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="plat"
+            @change="filterMealsSelector('plat')"
+          />
           <label class="form-check-label" for="plat">Plat</label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="dessert" @change="filterMealsSelector('dessert')" />
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="dessert"
+            @change="filterMealsSelector('dessert')"
+          />
           <label class="form-check-label" for="dessert">Dessert</label>
         </div>
         <div class="mt-3">
-          <input class="form-control" type="text" placeholder="Search..." @change="filertMealSelectorByName($event)" />
+          <input
+            class="form-control"
+            type="text"
+            placeholder="Search..."
+            @change="filertMealSelectorByName($event)"
+          />
         </div>
       </div>
 
       <!-- Meals List -->
       <ul v-if="MealstoDisplay.length > 0" class="list-group mt-3 mealslist">
-        <draggable class="mealcontainer" v-model="MealstoDisplay" :group="{ name: 'meals', pull: 'clone', put: false }"
-          :itemKey="'id'">
+        <draggable
+          class="mealcontainer"
+          v-model="MealstoDisplay"
+          :group="{ name: 'meals', pull: 'clone', put: false }"
+          :itemKey="'id'"
+        >
           <template #item="{ element }">
             <li class="list-group-item d-flex justify-content-between align-items-center">
               <span>{{ element.name }}</span>
@@ -49,16 +73,32 @@
         </thead>
         <tbody>
           <tr>
-            <td @click.stop="openModal('meal', day)" v-for="day in daysOfWeek" :key="day" class="align-top">
-              <draggable v-model="weekdays[day]" :group="{ name: 'meals' }" :itemKey="'id'" class="draggablezone"
-                @end="daychange(day)" @change="sortMealsByType(day)">
+            <td
+              @click.stop="openModal('meal', day)"
+              v-for="day in daysOfWeek"
+              :key="day"
+              class="align-top"
+            >
+              <draggable
+                v-model="weekdays[day]"
+                :group="{ name: 'meals' }"
+                :itemKey="'id'"
+                class="draggablezone"
+                @end="daychange(day)"
+                @change="sortMealsByType(day)"
+              >
                 <template #item="{ element }">
-                  <div @click.stop="openModal('meal', element, day)"
+                  <div
+                    @click.stop="openModal('meal', element, day)"
                     :class="['drag-el', getMealClass(element.mealType)]"
-                    class="p-2 border rounded mb-2 d-flex justify-content-between align-items-center">
+                    class="p-2 border rounded mb-2 d-flex justify-content-between align-items-center"
+                  >
                     <span>{{ element.name }}</span>
                     <!-- Prevent click propagation to the parent -->
-                    <button class="btn btn-sm btn-danger ms-2" @click.stop="deleteMealFromDay(day, element.id)">
+                    <button
+                      class="btn btn-sm btn-danger ms-2"
+                      @click.stop="deleteMealFromDay(day, element.id)"
+                    >
                       ✖
                     </button>
                   </div>
@@ -81,7 +121,6 @@ import ProductsService from '@/services/ProductsServices'
 import MenuService from '@/services/MenusService'
 import draggable from 'vuedraggable'
 import { useModalStore, menuModalStore, mealModalStore } from '@/helpers/modalStore'
-import { moveSyntheticComments } from 'typescript'
 
 const menuName = ref('')
 const MealsList = ref<Meals[]>([])
@@ -104,7 +143,9 @@ const props = defineProps<{
   menu: any
   show: boolean
 }>()
-const modalstore = useModalStore()
+const modalStore = useModalStore()
+const menuStore = menuModalStore()
+const mealStore = mealModalStore()
 
 const filterMealsSelector = (mealType: string) => {
   const index = selectedMealTypes.value.indexOf(mealType)
@@ -160,11 +201,14 @@ const openModal = (type: string, data?: any, day?: string) => {
   let meal = data
   if (type == 'menu') {
     let menu = saveData()
-    menuModalStore().openModal('menu', { menu: menu })
-    // open modal to enter a name and save in db 
+    menuStore.openModal('menu', { menu: menu })
+    // open modal to enter a name and save in db
   } else if (type == 'meal') {
-    menuModalStore().changeModal()
-    mealModalStore().openModal('meal:add', { meal }, day)
+    modalStore.hide()
+    mealStore.data = { meal: data, day: day }
+    modalStore.show('meal:add', 75)
+    // menuStore.changeModal()
+    // mealStore.openModal('meal:add', { meal }, day)
     // open modal to create or change a meal
     // on return of the modal if new meal created add to the list or modify the store and refresh data
   }
@@ -220,7 +264,7 @@ onMounted(async () => {
   MealstoDisplay.value = MealsList.value
   ProductsList.value = await ProductsService.getProducts()
   //need change to get data from the store
-  let modalData = menuModalStore().data
+  let modalData = menuStore.data
   if (modalData != null) {
     if (props.menu.id.length > 0) {
       MenuSelected.value = await MenuService.getMenuById(props.menu.id)
@@ -234,7 +278,6 @@ onMounted(async () => {
       })
     }
   }
-
 })
 </script>
 
@@ -260,6 +303,6 @@ onMounted(async () => {
 .draggablezone {
   min-width: 5vw;
   min-height: 5vh;
-  height: auto
+  height: auto;
 }
 </style>

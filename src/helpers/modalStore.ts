@@ -1,35 +1,60 @@
 import { defineStore } from 'pinia'
 
+// export const useModalStore = defineStore('modal', {
+//   state: () => ({
+//     isOpen: false,
+//     type: '',
+//     data: null as any,
+//     date: null as any, // datetype ?
+//     width: null as any,
+//   }),
+//   actions: {
+//     openModal(type: string, data: any = null) {
+//       this.isOpen = true
+//       this.type = type
+//       this.data = data
+//     },
+//     menuModal(type: string, menuId: any = null, menuDate: any = null) {
+//       this.isOpen = true
+//       this.type = type
+//       this.data = menuId
+//       this.date = menuDate
+//     },
+//     mealModal(type: string, mealId: any = null, mealDate: any = null) {
+//       this.isOpen = true
+//       this.type = type
+//       this.data = mealId
+//       this.date = mealDate
+//     },
+//     closeModal() {
+//       this.isOpen = false
+//       this.type = ''
+//       this.data = null
+//     },
+//   },
+// })
+
 export const useModalStore = defineStore('modal', {
   state: () => ({
     isOpen: false,
     type: '',
-    data: null as any,
-    date: null as any, // datetype ?
-    width: null as any,
+    width: 0,
+    logs: [],
   }),
   actions: {
-    openModal(type: string, data: any = null) {
+    show(type: string, width: number) {
       this.isOpen = true
       this.type = type
-      this.data = data
+      this.width = width
     },
-    menuModal(type: string, menuId: any = null, menuDate: any = null) {
-      this.isOpen = true
-      this.type = type
-      this.data = menuId
-      this.date = menuDate
-    },
-    mealModal(type: string, mealId: any = null, mealDate: any = null) {
-      this.isOpen = true
-      this.type = type
-      this.data = mealId
-      this.date = mealDate
-    },
-    closeModal() {
+    hide() {
       this.isOpen = false
       this.type = ''
-      this.data = null
+    },
+    close() {
+      this.type = ''
+      this.isOpen = false
+      this.logs = []
     },
   },
 })
@@ -43,20 +68,23 @@ export const menuModalStore = defineStore('menu', {
     width: null as any,
   }),
   actions: {
-    openModal(type: string, menuId: any = null, menuDate: any = null) {
-      this.isOpen = true
-      this.type = type
-      this.data = menuId
-      this.date = menuDate
+    setData(data: any) {
+      this.data = data
     },
-    closeModal() {
-      this.isOpen = false
-      this.type = ''
-      this.data = null
-    },
-    changeModal() {
-      this.isOpen = false
-    },
+    // openModal(type: string, menuId: any = null, menuDate: any = null) {
+    //   this.isOpen = true
+    //   this.type = type
+    //   this.data = menuId
+    //   this.date = menuDate
+    // },
+    // closeModal() {
+    //   this.isOpen = false
+    //   this.type = ''
+    //   this.data = null
+    // },
+    // changeModal() {
+    //   this.isOpen = false
+    // },
   },
 })
 
@@ -69,9 +97,7 @@ export const mealModalStore = defineStore('meal', {
     width: null as any,
   }),
   actions: {
-    openModal(type: string, mealId: any = null, mealDate: any = null) {
-      this.isOpen = true
-      this.type = type
+    setData(mealId: any = null, mealDate: any = null) {
       this.data = mealId
       this.date = mealDate
     },

@@ -22,10 +22,9 @@ onMounted(async () => {
 })
 
 const openMenu = (menu?: Menu) => {
-  menuModalStore().openModal('menu:description', menu)
+  menuModalStore().setData(menu)
+  useModalStore().show('menu:description', 95)
 }
-
-
 </script>
 <template>
   <div class="col-2 me-1">
