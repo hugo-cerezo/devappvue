@@ -1,22 +1,3 @@
-// interface Ingredients {
-//   name: string
-//   quantity: number
-//   weight: string
-// }
-// export interface CalendarEvent {
-//   title: string
-//   fullDay: boolean
-//   date: string
-//   type: number
-//   color: string
-//   extendedProps?: {
-//     ingredients: Products[]
-//     recipe: string[]
-//   }
-// }
-
-import type { Dictionary } from '@fullcalendar/core/internal'
-
 export interface FullCalendarEvent {
   id?: string
   groupId?: string
@@ -65,4 +46,17 @@ export interface Menu {
   id?: string
   name: string
   days: { [key: string]: string[] }
+}
+
+export interface ModalLog {
+  action: string
+  type: string
+  width: number
+}
+
+export interface ModalState {
+  isOpen: boolean
+  type: string
+  width: number
+  logs: ModalLog[]
 }

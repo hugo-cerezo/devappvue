@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import AddEvent from './forms/AddEvent.vue'
-import EditEvent from './forms/EditEvent.vue'
-import Description from '@/views/Description.vue'
 import MenusGestionView from '@/views/MenusGestionView.vue'
 import { useModalStore } from '@/stores/modalStore'
 import { mealModalStore } from '@/stores/mealStore'
@@ -21,14 +19,11 @@ defineProps({
 defineEmits(['modal:show', 'form:add', 'form:edit', 'form:remove'])
 // Méthode pour fermer la modale
 const hideModal = (event: MouseEvent) => {
-  const target = (event.target as HTMLElement).className
-  console.log(target)
-  if (target === 'modal') modalStore.close() // Ferme la modale via le store
+  if ((event.target as HTMLElement).className === 'modal') modalStore.close() // Ferme la modale via le store
 }
 </script>
 
 <template>
-  <pre>{{ modalStore.width }}</pre>
   <div
     class="modal"
     v-if="modalStore.isOpen"

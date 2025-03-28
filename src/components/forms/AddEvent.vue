@@ -46,14 +46,6 @@ const confirm = () => {
   }
   clear()
 }
-const cancel = () => {
-  if (menuModalStore().type != null) {
-    mealModalStore().closeModal()
-    menuModalStore().openModal(menuModalStore().type, menuModalStore().data)
-    clear()
-  }
-}
-
 const removeProduct = (product: Products) => {
   products.value.splice(
     products.value.findIndex((p) => p.name === product.name),
@@ -84,7 +76,7 @@ onMounted(async () => {
     </div>
     <div class="d-flex justify-content-end mt-2">
       <button class="btn btn-primary me-1" @click="confirm">Confirm</button>
-      <button class="btn btn-danger me-1" @click="cancel">Cancel</button>
+      <button class="btn btn-danger me-1" @click="modalStore.rewind()">Cancel</button>
       <button class="btn btn-secondary" @click="selectedAction = 'new'">
         Créer un nouveau plat
       </button>
@@ -115,14 +107,7 @@ onMounted(async () => {
 
     <div class="d-flex justify-content-end mt-2">
       <button class="btn btn-primary me-1" @click="confirm">Confirm</button>
-      <button class="btn btn-danger me-1" @click="cancel">Cancel</button>
-      <button
-        class="btn btn-secondary"
-        v-if="!mealStore.data.meal"
-        @click="selectedAction = 'existing'"
-      >
-        Plats existants
-      </button>
+      <button class="btn btn-danger me-1" @click="selectedAction = 'existing'">Cancel</button>
     </div>
   </section>
 </template>

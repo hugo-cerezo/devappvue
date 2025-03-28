@@ -14,11 +14,13 @@ onMounted(async () => {
 
   menus.value.forEach(async (event, i) => {
     const id = await event.id
-    let el = document.getElementById(event.id)
-    new Draggable(el as HTMLElement, {
-      eventData: menus.value[i],
-      // itemSelector: '.item',
-    })
+    if (id) {
+      let el = document.getElementById(id)
+      new Draggable(el as HTMLElement, {
+        eventData: menus.value[i],
+        // itemSelector: '.item',
+      })
+    }
   })
 })
 
