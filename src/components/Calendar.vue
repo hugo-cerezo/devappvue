@@ -5,16 +5,18 @@ import interactionPlugin from '@fullcalendar/interaction'
 import type { DateClickArg } from '@fullcalendar/interaction'
 import type { CalendarOptions, EventClickArg } from '@fullcalendar/core/index.js'
 
-import { defineIconType } from '@/helpers/calendarIcons'
+import { defineIconType, defineColor } from '@/helpers/calendarIcons'
 import bootstrap5Plugin from '@fullcalendar/bootstrap5'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import { EventsService } from '@/services/EventsService'
+import { MealsService } from '@/services/MealsService'
 import { defineEmits } from 'vue'
 
 const emit = defineEmits(['modal:create', 'modal:describe', 'modal:edit', 'menus:add'])
 
 const eventsService = new EventsService()
+const mealsService = new MealsService()
 const handleDateClick = (arg: DateClickArg) => {
   emit('modal:create', arg)
 }
@@ -27,16 +29,25 @@ const calendarOptions: CalendarOptions = {
   plugins: [dayGridPlugin, interactionPlugin, bootstrap5Plugin],
   droppable: true,
   initialView: 'dayGridMonth',
-  eventOrder: (event: any) => {
-    return event.extendedProps.meal.type.id
-  },
   events: async function (fetchInfo, successCallback, failureCallback) {
     try {
       const events = await eventsService.getEvents()
-      successCallback(events)
+      // Fetch all meal data before passing events to the calendar
+      for (let event of events) {
+        const mealPromises = event.meals.map((mealId: string) => mealsService.getMealsById(mealId))
+        event.meals = await Promise.all(mealPromises)
+
+        event.color = defineColor(event)
+      }
+
+      successCallback(events) // Pass events with meal data to the calendar
     } catch (error) {
       failureCallback(error as Error)
+      console.error(error)
     }
+  },
+  eventOrder: (event: any) => {
+    return event.extendedProps.meals[0].mealType
   },
   eventDurationEditable: false,
   firstDay: 1,
@@ -53,9 +64,9 @@ const calendarOptions: CalendarOptions = {
     node.prepend(iconType)
     node.appendChild(editIcon)
   },
-  eventReceive(arg) {    
+  eventReceive(arg) {
     if (arg.event.extendedProps.days) {
-      arg.revert()      
+      arg.revert()
       emit('menus:add', arg.event)
     }
   },
